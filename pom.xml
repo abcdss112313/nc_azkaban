@@ -9,5 +9,7 @@
 		<module>azkaban-common</module>
 		<module>azkaban-webserver</module>
 		<module>azkaban-execserver</module>
+		<module>azkaban-sql</module>
+		<module>azkaban-migration</module>
 	</modules>
 </project>

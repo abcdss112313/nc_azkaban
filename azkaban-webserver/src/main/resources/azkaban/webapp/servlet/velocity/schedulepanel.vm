@@ -56,12 +56,13 @@
                     <input id="period" type="text" size="2" value="1" class="form-control">
                   </div>
                   <div class="col-sm-3">
-                    <select id="period_units" class="form-control">
-                      <option value="d">Days</option>
-                      <option value="h">Hours</option>
+                    <select id="period_units" class="form-control">                       
+                      <option value="s">Seconds</option>
                       <option value="m">Minutes</option>
-                      <option value="M">Months</option>
+                      <option value="h">Hours</option>
+                      <option value="d">Days</option>
                       <option value="w">Weeks</option>
+                      <option value="M">Months</option>
                     </select>
                   </div>
                 </div>
