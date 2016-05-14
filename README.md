@@ -28,3 +28,7 @@ azkaban官方的使用文档:  http://azkaban.github.io/azkaban/docs/latest
 ![输入图片说明](http://git.oschina.net/uploads/images/2016/0415/094004_35beadfc_70679.png "在这里输入图片标题")
 
 ![输入图片说明](http://git.oschina.net/uploads/images/2016/0415/094038_07f0768e_70679.png "在这里输入图片标题")
+
+用得爽的，还请多多支持我们！
+
+<img src="http://git.oschina.net/uploads/images/2016/0504/100053_afaebf72_70679.png" width="200" height="200"/>
