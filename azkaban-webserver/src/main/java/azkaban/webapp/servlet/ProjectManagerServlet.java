@@ -578,20 +578,20 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
 
     Project project = projectManager.getProject(projectName);
     if (project == null) {
-      this.setErrorMessageInCookie(resp, "Project " + projectName
-          + " doesn't exist.");
+      this.setErrorMessageInCookie(resp, "项目名: " + projectName
+          + " 不存在");
       resp.sendRedirect(req.getContextPath());
       return;
     }
 
     if (!hasPermission(project, user, Type.ADMIN)) {
       this.setErrorMessageInCookie(resp,
-          "Cannot delete. User '" + user.getUserId() + "' is not an ADMIN.");
+          "不能删除，用户:'" + user.getUserId() + "'非管理员");
       resp.sendRedirect(req.getRequestURI() + "?project=" + projectName);
       return;
     }
 
-    // Check if scheduled
+    // 查看工是否已经在调度计划中
     Schedule sflow = null;
     try {
       for (Schedule flow : scheduleManager.getSchedules()) {
@@ -606,7 +606,7 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
     }
 
     if (sflow != null) {
-      this.setErrorMessageInCookie(resp, "Cannot delete. Please unschedule "
+      this.setErrorMessageInCookie(resp, "处于调度中的工程无法被删除 "
           + sflow.getScheduleName() + ".");
 
       resp.sendRedirect(req.getRequestURI() + "?project=" + projectName);
@@ -1478,6 +1478,13 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
     page.render();
   }
 
+  /**
+   * 创建工程
+   * @param req
+   * @param resp
+   * @param session
+   * @throws ServletException
+   */
   private void handleProjectPage(HttpServletRequest req,
       HttpServletResponse resp, Session session) throws ServletException {
     Page page =
@@ -1537,7 +1544,7 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
     } catch (AccessControlException e) {
       page.add("errorMsg", e.getMessage());
     }
-    page.render();
+    page.render(); //渲染
   }
 
   private void handleCreate(HttpServletRequest req, HttpServletResponse resp,

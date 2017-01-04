@@ -99,7 +99,7 @@ public class XmlUserManager implements UserManager {
     HashMap<String, Set<String>> proxyUserMap =
         new HashMap<String, Set<String>>();
 
-    // Creating the document builder to parse xml.
+    // 构建解析器.
     DocumentBuilderFactory docBuilderFactory =
         DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = null;
@@ -126,7 +126,9 @@ public class XmlUserManager implements UserManager {
     NodeList tagList = doc.getChildNodes();
     Node azkabanUsers = tagList.item(0);
 
+    //获取用户列表
     NodeList azkabanUsersList = azkabanUsers.getChildNodes();
+
     for (int i = 0; i < azkabanUsersList.getLength(); ++i) {
       Node node = azkabanUsersList.item(i);
       if (node.getNodeType() == Node.ELEMENT_NODE) {

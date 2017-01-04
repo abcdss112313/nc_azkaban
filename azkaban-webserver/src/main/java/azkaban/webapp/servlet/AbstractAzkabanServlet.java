@@ -86,6 +86,7 @@ public abstract class AbstractAzkabanServlet extends HttpServlet {
 
   @Override
   public void init(ServletConfig config) throws ServletException {
+    //获取之前的server实例
     application =
         (AzkabanServer) config.getServletContext().getAttribute(
             AzkabanServletContextListener.AZKABAN_SERVLET_CONTEXT_KEY);

@@ -38,10 +38,10 @@
         <div class="well">
           <form id="login-form" role="form">
             <fieldset>
-              <legend>Login</legend>
-              <input type="text" class="form-control" name="username" id="username" placeholder="Username">
-              <input type="password" class="form-control" name="password" id="password" placeholder="Password">
-              <button type="button" class="btn btn-primary btn-lg btn-block" id="login-submit">Login</button>
+              <legend>登录</legend>
+              <input type="text" class="form-control" name="username" id="username" placeholder="用户名">
+              <input type="password" class="form-control" name="password" id="password" placeholder="密码">
+              <button type="button" class="btn btn-primary btn-lg btn-block" id="login-submit">登录</button>
             </fieldset>
           </form>
         </div><!-- /.well -->

@@ -100,7 +100,8 @@ public abstract class LoginAbstractAzkabanServlet extends
       throws ServletException, IOException {
     // Set session id
     Session session = getSessionFromRequest(req);
-    logRequest(req, session);
+    logRequest(req, session);  //记录访问
+    //登出，清理session
     if (hasParam(req, "logout")) {
       resp.sendRedirect(req.getContextPath());
       if (session != null) {
@@ -125,7 +126,7 @@ public abstract class LoginAbstractAzkabanServlet extends
         retVal.put("error", "session");
         this.writeJSON(resp, retVal);
       } else {
-        handleLogin(req, resp);
+        handleLogin(req, resp);  //处理逻辑是在这里
       }
     }
   }
@@ -244,7 +245,7 @@ public abstract class LoginAbstractAzkabanServlet extends
       throws ServletException, IOException {
     handleLogin(req, resp, null);
   }
-
+  //生成数据
   private void handleLogin(HttpServletRequest req, HttpServletResponse resp,
       String errorMsg) throws ServletException, IOException {
     Page page = newPage(req, resp, "azkaban/webapp/servlet/velocity/login.vm");

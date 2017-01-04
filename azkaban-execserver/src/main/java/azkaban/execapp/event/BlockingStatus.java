@@ -22,6 +22,7 @@ public class BlockingStatus {
   private static final long WAIT_TIME = 5 * 60 * 1000;
   private final int execId;
   private final String jobId;
+
   private Status status;
 
   public BlockingStatus(int execId, String jobId, Status initialStatus) {

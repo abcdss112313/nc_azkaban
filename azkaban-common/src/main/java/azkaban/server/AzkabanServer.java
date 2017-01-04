@@ -39,6 +39,7 @@ public abstract class AzkabanServer {
       "azkaban.private.properties";
   public static final String DEFAULT_CONF_PATH = "conf";
   private static Props azkabanProperties = null;
+  private static File dir;
 
   public static Props loadProps(String[] args) {
     azkabanProperties = loadProps(args, new OptionParser());
@@ -49,6 +50,12 @@ public abstract class AzkabanServer {
     return azkabanProperties;
   }
 
+  /**
+   * 配置初始化，解析所有的配置参数
+   * @param args
+   * @param parser
+   * @return
+   */
   public static Props loadProps(String[] args, OptionParser parser) {
     ;
     OptionSpec<String> configDirectory =
@@ -82,6 +89,7 @@ public abstract class AzkabanServer {
   }
 
   private static Props loadAzkabanConfigurationFromDirectory(File dir) {
+    AzkabanServer.dir = dir;
     File azkabanPrivatePropsFile =
         new File(dir, AZKABAN_PRIVATE_PROPERTIES_FILE);
     File azkabanPropsFile = new File(dir, AZKABAN_PROPERTIES_FILE);
@@ -111,12 +119,14 @@ public abstract class AzkabanServer {
 
   /**
    * Loads the Azkaban property file from the AZKABAN_HOME conf directory
-   *
+   * 从环境变量中去读取AZKABAN的配置目录
    * @return
    */
   private static Props loadConfigurationFromAzkabanHome() {
-    String azkabanHome = System.getenv("AZKABAN_HOME");
-
+    //String azkabanHome = System.getenv("AZKABAN_HOME");
+    //调试写死配置文件路径
+    String azkabanHome="/home/liyangzhou/java_code/azkaban_code/azkaban-webserver/src/main/resources";
+    String oracle = System.getenv("ORACLE_HOME");
     if (azkabanHome == null) {
       logger.error("AZKABAN_HOME not set. Will try default.");
       return null;

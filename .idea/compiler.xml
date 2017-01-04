@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="azkaban-common" />
+        <module name="azkaban-execserver" />
+        <module name="azkaban-migration" />
+        <module name="azkaban-sql" />
+        <module name="azkaban-webserver" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="azkaban-common" target="1.8" />
+      <module name="azkaban-execserver" target="1.8" />
+      <module name="azkaban-migration" target="1.8" />
+      <module name="azkaban-sql" target="1.5" />
+      <module name="azkaban-webserver" target="1.8" />
+      <module name="azkaban_code" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

@@ -14,7 +14,7 @@
  * the License.
  */
 
-$.namespace('azkaban');
+$.namespace('azkaban');     /*定义一个命名空间*/
 
 var loginView;
 azkaban.LoginView = Backbone.View.extend({
@@ -31,7 +31,6 @@ azkaban.LoginView = Backbone.View.extend({
     console.log("Logging in.");
     var username = $("#username").val();
     var password = $("#password").val();
-
     $.ajax({
       async: "false",
       url: contextURL,

@@ -251,10 +251,8 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
   }
 
   /**
-   * Creates a Project in the db.
-   *
-   * It will throw an exception if it finds an active project of the same name,
-   * or the SQL fails
+   * 创建工程
+   * 存在则会失败
    */
   @Override
   public Project createNewProject(String name, String description, User creator)
@@ -272,19 +270,28 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
     return project;
   }
 
+  /**
+   * 创建工程
+   * @param connection
+   * @param name
+   * @param description
+   * @param creator
+   * @return
+   * @throws ProjectManagerException
+   */
   private synchronized Project createNewProject(Connection connection,
       String name, String description, User creator)
       throws ProjectManagerException {
     QueryRunner runner = new QueryRunner();
     ProjectResultHandler handler = new ProjectResultHandler();
 
-    // See if it exists first.
+    // 查看工程是否存在
     try {
       List<Project> project =
           runner
               .query(connection,
                   ProjectResultHandler.SELECT_ACTIVE_PROJECT_BY_NAME, handler,
-                  name);
+                  name);   //QreryRunner的query方法
       if (!project.isEmpty()) {
         throw new ProjectManagerException("Active project with name " + name
             + " already exists in db.");
@@ -296,7 +303,7 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
     }
 
     final String INSERT_PROJECT =
-        "INSERT INTO projects ( name, active, modified_time, create_time, version, last_modified_by, description, enc_type, settings_blob) values (?,?,?,?,?,?,?,?,?)";
+        "INSERT INTO azkaban.projects ( name, active, modified_time, create_time, version, last_modified_by, description, enc_type, settings_blob) values (?,?,?,?,?,?,?,?,?)";
     // Insert project
     try {
       long time = System.currentTimeMillis();
@@ -320,7 +327,7 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
           "Insert project for existing project failed. " + name, e);
     }
 
-    // Do another query to grab and return the project.
+    // Do another query to grab and return the project.插入之后，为什么又要去查询他？？？？
     Project project = null;
     try {
       List<Project> projects =

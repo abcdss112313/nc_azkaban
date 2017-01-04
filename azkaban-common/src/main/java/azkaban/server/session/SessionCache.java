@@ -40,7 +40,7 @@ public class SessionCache {
 
   /**
    * Constructor taking global props.
-   *
+   * 缓存器,调用的google的jar包
    * @param props
    */
   public SessionCache(Props props) {

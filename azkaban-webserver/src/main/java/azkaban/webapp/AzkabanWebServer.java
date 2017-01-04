@@ -182,25 +182,35 @@ public class AzkabanWebServer extends AzkabanServer {
 
   /**
    * Constructor
+   * Azkaban web server 初始化
    */
   public AzkabanWebServer(Server server, Props props) throws Exception {
     this.props = props;
     this.server = server;
+    //初始化velocity实例
     velocityEngine =
         configureVelocityEngine(props
             .getBoolean(VELOCITY_DEV_MODE_PARAM, false));
+
+    //初始化sessionCache
     sessionCache = new SessionCache(props);
+
+    //初始化用户信息，涉及到权限之类的信息
     userManager = loadUserManager(props);
 
+    //初始化ALERT 以及插件
     alerters = loadAlerters(props);
 
+    //executorManager初始化,主要是SQL执行相关信息以及任务执行的信息
     executorManager = loadExecutorManager(props);
+
     projectManager = loadProjectManager(props);
 
     triggerManager = loadTriggerManager(props);
+
     loadBuiltinCheckersAndActions();
 
-    // load all trigger agents here
+    //加载所有的触发器在这里
     scheduleManager = loadScheduleManager(triggerManager, props);
 
     String triggerPluginDir =
@@ -212,7 +222,7 @@ public class AzkabanWebServer extends AzkabanServer {
 
     tempDir = new File(props.getString("azkaban.temp.dir", "temp"));
 
-    // Setup time zone
+    // 时区设置
     if (props.containsKey(DEFAULT_TIMEZONE_ID)) {
       String timezone = props.getString(DEFAULT_TIMEZONE_ID);
       System.setProperty("user.timezone", timezone);
@@ -227,6 +237,7 @@ public class AzkabanWebServer extends AzkabanServer {
   private void setTriggerPlugins(Map<String, TriggerPlugin> triggerPlugins) {
     this.triggerPlugins = triggerPlugins;
   }
+
 
   private UserManager loadUserManager(Props props) {
     Class<?> userManagerClass = props.getClass(USER_MANAGER_CLASS_PARAM, null);
@@ -251,7 +262,7 @@ public class AzkabanWebServer extends AzkabanServer {
 
   private ProjectManager loadProjectManager(Props props) {
     logger.info("Loading JDBC for project management");
-    JdbcProjectLoader loader = new JdbcProjectLoader(props);
+    JdbcProjectLoader loader = new JdbcProjectLoader(props);  //加载数据源
     ProjectManager manager = new ProjectManager(loader, props);
     return manager;
   }
@@ -305,6 +316,11 @@ public class AzkabanWebServer extends AzkabanServer {
         CreateTriggerAction.class);
   }
 
+  /**
+   * 报警
+   * @param props
+   * @return
+   */
   private Map<String, Alerter> loadAlerters(Props props) {
     Map<String, Alerter> allAlerters = new HashMap<String, Alerter>();
     // load built-in alerters
@@ -616,7 +632,7 @@ public class AzkabanWebServer extends AzkabanServer {
   }
 
   /**
-   * Creates and configures the velocity engine.
+   * 创建Velocity运行实例
    *
    * @param devMode
    * @return
@@ -666,12 +682,13 @@ public class AzkabanWebServer extends AzkabanServer {
   }
 
   /**
-   * Azkaban using Jetty
+   * jetty启动项
    *
    * @param args
    */
   public static void main(String[] args) throws Exception {
     logger.info("Starting Jetty Azkaban Web Server...");
+
     Props azkabanSettings = AzkabanServer.loadProps(args);
 
     if (azkabanSettings == null) {
@@ -686,10 +703,12 @@ public class AzkabanWebServer extends AzkabanServer {
         azkabanSettings.getBoolean("jetty.connector.stats", true);
     logger.info("Setting up connector with stats on: " + isStatsOn);
 
+
+    //==========jetty server 初始化 ============
     boolean ssl;
     int port;
-    final Server server = new Server();
-    if (azkabanSettings.getBoolean("jetty.use.ssl", true)) {
+    final Server server = new Server(); //这个不是我们以往的socket的server 调用jar包为org.mortbay.jetty.Server.Server()
+    if (azkabanSettings.getBoolean("jetty.use.ssl", true)) {  //调试不采用ssl加密方式
       int sslPortNumber =
           azkabanSettings.getInt("jetty.ssl.port", DEFAULT_SSL_PORT_NUMBER);
       port = sslPortNumber;
@@ -697,7 +716,7 @@ public class AzkabanWebServer extends AzkabanServer {
       logger.info("Setting up Jetty Https Server with port:" + sslPortNumber
           + " and numThreads:" + maxThreads);
 
-      SslSocketConnector secureConnector = new SslSocketConnector();
+      SslSocketConnector secureConnector = new SslSocketConnector();  //SSL通信
       secureConnector.setPort(sslPortNumber);
       secureConnector.setKeystore(azkabanSettings.getString("jetty.keystore"));
       secureConnector.setPassword(azkabanSettings.getString("jetty.password"));
@@ -719,22 +738,24 @@ public class AzkabanWebServer extends AzkabanServer {
       server.addConnector(secureConnector);
     } else {
       ssl = false;
-      port = azkabanSettings.getInt("jetty.port", DEFAULT_PORT_NUMBER);
-      SocketConnector connector = new SocketConnector();
+      port = azkabanSettings.getInt("jetty.port", DEFAULT_PORT_NUMBER);//默认端口8081
+      SocketConnector connector = new SocketConnector();  //通信
       connector.setPort(port);
-      connector.setHeaderBufferSize(MAX_HEADER_BUFFER_SIZE);
-      server.addConnector(connector);
+      connector.setHeaderBufferSize(MAX_HEADER_BUFFER_SIZE); //默认设置为10M
+      server.addConnector(connector);//纳入jetty server管理
     }
 
     // setting stats configuration for connectors
     for (Connector connector : server.getConnectors()) {
-      connector.setStatsOn(isStatsOn);
+      connector.setStatsOn(isStatsOn);  //开启统计开关
     }
 
     String hostname = azkabanSettings.getString("jetty.hostname", "localhost");
     azkabanSettings.put("server.hostname", hostname);
     azkabanSettings.put("server.port", port);
     azkabanSettings.put("server.useSSL", String.valueOf(ssl));
+    //=============jetty server 构造完成==============
+
 
     app = new AzkabanWebServer(server, azkabanSettings);
 
@@ -759,18 +780,25 @@ public class AzkabanWebServer extends AzkabanServer {
     String staticDir =
         azkabanSettings.getString("web.resource.dir", DEFAULT_STATIC_DIR);
     logger.info("Setting up web resource dir " + staticDir);
+
+
+    //===============servlet 初始化=============
     Context root = new Context(server, "/", Context.SESSIONS);
     root.setMaxFormContentSize(MAX_FORM_CONTENT_SIZE);
-
+    //默认访问servlet
     String defaultServletPath =
         azkabanSettings.getString("azkaban.default.servlet.path", "/index");
     root.setResourceBase(staticDir);
+
+    //=======servlet 解析 =========
     ServletHolder indexRedirect =
         new ServletHolder(new IndexRedirectServlet(defaultServletPath));
     root.addServlet(indexRedirect, "/");
+
     ServletHolder index = new ServletHolder(new ProjectServlet());
     root.addServlet(index, "/index");
 
+    //===配置静态资源路径===
     ServletHolder staticServlet = new ServletHolder(new DefaultServlet());
     root.addServlet(staticServlet, "/css/*");
     root.addServlet(staticServlet, "/js/*");
@@ -778,6 +806,7 @@ public class AzkabanWebServer extends AzkabanServer {
     root.addServlet(staticServlet, "/fonts/*");
     root.addServlet(staticServlet, "/favicon.ico");
 
+    //===配置动态请求路径对应的 Servlet，每种请求类型都由对应的servlet处理===
     root.addServlet(new ServletHolder(new ProjectManagerServlet()), "/manager");
     root.addServlet(new ServletHolder(new ExecutorServlet()), "/executor");
     root.addServlet(new ServletHolder(new HistoryServlet()), "/history");
@@ -806,12 +835,12 @@ public class AzkabanWebServer extends AzkabanServer {
 
     root.setAttribute(ServerConstants.AZKABAN_SERVLET_CONTEXT_KEY, app);
     try {
-      server.start();
+      server.start();//服务启动
     } catch (Exception e) {
       logger.warn(e);
       Utils.croak(e.getMessage(), 1);
     }
-
+    //addShutdownHook进程挂掉的时候打印当时的进程资源利用情况
     Runtime.getRuntime().addShutdownHook(new Thread() {
 
       public void run() {
@@ -995,6 +1024,7 @@ public class AzkabanWebServer extends AzkabanServer {
     // Velocity needs the jar resource paths to be set.
     String jarResourcePath = StringUtils.join(jarPaths, ", ");
     logger.info("Setting jar resource path " + jarResourcePath);
+
     VelocityEngine ve = azkabanWebApp.getVelocityEngine();
     ve.addProperty("jar.resource.loader.path", jarResourcePath);
 

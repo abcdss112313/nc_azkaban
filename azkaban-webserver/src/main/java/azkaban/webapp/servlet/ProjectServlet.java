@@ -36,7 +36,7 @@ import azkaban.user.UserManager;
 import azkaban.webapp.AzkabanWebServer;
 
 /**
- * The main page
+ * 主页跳转
  */
 public class ProjectServlet extends LoginAbstractAzkabanServlet {
 	private static final Logger logger = Logger.getLogger(ProjectServlet.class.getName());

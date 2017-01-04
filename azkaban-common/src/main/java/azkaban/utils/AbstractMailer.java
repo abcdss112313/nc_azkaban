@@ -35,6 +35,10 @@ public class AbstractMailer {
 
   private long attachmentMazSizeInByte;
 
+  /**
+   * 获取配置文件中的邮箱信息
+   * @param props
+   */
   public AbstractMailer(Props props) {
     this.azkabanName = props.getString("azkaban.name", "azkaban");
     this.mailHost = props.getString("mail.host", "localhost");

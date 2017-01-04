@@ -119,10 +119,10 @@ public class ExecutorManager extends EventHandler implements
 
   public ExecutorManager(Props azkProps, ExecutorLoader loader,
       Map<String, Alerter> alerters) throws ExecutorManagerException {
-    this.alerters = alerters;
-    this.azkProps = azkProps;
-    this.executorLoader = loader;
-    this.setupExecutors();
+    this.alerters = alerters;//插件设置
+    this.azkProps = azkProps;//参数设置
+    this.executorLoader = loader;//数据源相关设置
+    this.setupExecutors(); //执行器设置
     this.loadRunningFlows();
 
     queuedFlows =
@@ -181,7 +181,7 @@ public class ExecutorManager extends EventHandler implements
   }
 
   /**
-   *
+   *  设置执行器，执行器分为singel和mulite两种
    * {@inheritDoc}
    * @see azkaban.executor.ExecutorManagerAdapter#setupExecutors()
    */
@@ -189,10 +189,11 @@ public class ExecutorManager extends EventHandler implements
   public void setupExecutors() throws ExecutorManagerException {
     Set<Executor> newExecutors = new HashSet<Executor>();
 
-    if (isMultiExecutorMode()) {
+    if (isMultiExecutorMode()) { //多个执行器
       logger.info("Initializing multi executors from database");
+      //查询前台表配置激活执行器
       newExecutors.addAll(executorLoader.fetchActiveExecutors());
-    } else if (azkProps.containsKey("executor.port")) {
+    } else if (azkProps.containsKey("executor.port")) {//单一执行器
       // Add local executor, if specified as per properties
       String executorHost = azkProps.getString("executor.host", "localhost");
       int executorPort = azkProps.getInt("executor.port");
