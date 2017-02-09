@@ -64,14 +64,14 @@ public class XmlValidatorManager implements ValidatorManager {
    */
   public XmlValidatorManager(Props props) {
     validatorDirPath = props.getString(ValidatorConfigs.VALIDATOR_PLUGIN_DIR, ValidatorConfigs.DEFAULT_VALIDATOR_DIR);
-    File validatorDir = new File(validatorDirPath);
+    File validatorDir = new File(validatorDirPath);//校验目录，一般好像都没有建立
     if (!validatorDir.canRead() || !validatorDir.isDirectory()) {
       logger.warn("Validator directory " + validatorDirPath
           + " does not exist or is not a directory.");
     }
 
     // Check for updated validator JAR files
-    checkResources();
+    checkResources(); //其实这里是没有去校验啥的没有校验目录
 
     // Load the validators specified in the xml file.
     try {
@@ -92,7 +92,7 @@ public class XmlValidatorManager implements ValidatorManager {
           if (f.getName().endsWith(".jar")) {
             resources.add(f.toURI().toURL());
             if (resourceTimestamps.get(f.getName()) == null
-                || resourceTimestamps.get(f.getName()) != f.lastModified()) {
+                || resourceTimestamps.get(f.getName()) != f.lastModified()) { //和上此文件修改时间不相同说明已经更新
               reloadResources = true;
               logger.info("Resource " + f.getName() + " is updated. Reload the classloader.");
               resourceTimestamps.put(f.getName(), f.lastModified());
@@ -133,7 +133,7 @@ public class XmlValidatorManager implements ValidatorManager {
   public void loadValidators(Props props, Logger log) {
     validators = new LinkedHashMap<String, ProjectValidator>();
     // Add the default validator
-    DirectoryFlowLoader flowLoader = new DirectoryFlowLoader(props, log);
+    DirectoryFlowLoader flowLoader = new DirectoryFlowLoader(props, log);//加载配置文件以及job文件
     validators.put(flowLoader.getValidatorName(), flowLoader);
 
     if (!props.containsKey(ValidatorConfigs.XML_FILE_PARAM)) {

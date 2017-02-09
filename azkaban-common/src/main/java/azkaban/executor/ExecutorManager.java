@@ -131,7 +131,7 @@ public class ExecutorManager extends EventHandler implements
 
     cacheDir = new File(azkProps.getString("cache.directory", "cache"));
 
-    executingManager = new ExecutingManagerUpdaterThread();
+    executingManager = new ExecutingManagerUpdaterThread();  //启动一个线程
     executingManager.start();
 
     if(isMultiExecutorMode()) {
@@ -1015,7 +1015,7 @@ public class ExecutorManager extends EventHandler implements
                 + ". Will execute concurrently. \n";
           }
         }
-
+       //内存检查。。。。。
         boolean memoryCheck =
           !ProjectWhitelist.isProjectWhitelisted(exflow.getProjectId(),
             ProjectWhitelist.WhitelistType.MemoryCheck);
@@ -1023,14 +1023,14 @@ public class ExecutorManager extends EventHandler implements
 
         // The exflow id is set by the loader. So it's unavailable until after
         // this call.
-        executorLoader.uploadExecutableFlow(exflow);
+        executorLoader.uploadExecutableFlow(exflow); //插入这flow的信息到数据库中
 
         // We create an active flow reference in the datastore. If the upload
         // fails, we remove the reference.
         ExecutionReference reference =
           new ExecutionReference(exflow.getExecutionId());
 
-        if (isMultiExecutorMode()) {
+        if (isMultiExecutorMode()) { //多核模式下 多个执行器
           //Take MultiExecutor route
           executorLoader.addActiveExecutableReference(reference);
           queuedFlows.enqueue(exflow, reference);
@@ -1046,7 +1046,7 @@ public class ExecutorManager extends EventHandler implements
             throw e;
           }
         }
-        message +=
+        message +=   //正式提交任务
           "Execution submitted successfully with exec id "
             + exflow.getExecutionId();
       }
@@ -1727,6 +1727,7 @@ public class ExecutorManager extends EventHandler implements
   }
 
   /**
+   * FLOW 任务分发
    * Calls executor to dispatch the flow, update db to assign the executor and
    * in-memory state of executableFlow
    */

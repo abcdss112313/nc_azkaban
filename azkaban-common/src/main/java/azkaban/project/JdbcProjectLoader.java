@@ -1104,10 +1104,10 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
     Connection connection = getConnection();
 
     try {
-      cleanOlderProjectVersionFlows(connection, projectId, version);
-      cleanOlderProjectVersionProperties(connection, projectId, version);
-      cleanOlderProjectFiles(connection, projectId, version);
-      cleanOlderProjectVersion(connection, projectId, version);
+      cleanOlderProjectVersionFlows(connection, projectId, version);//清除project_flows中旧版本数据
+      cleanOlderProjectVersionProperties(connection, projectId, version);//清除project_properties
+      cleanOlderProjectFiles(connection, projectId, version);//project_files 同上
+      cleanOlderProjectVersion(connection, projectId, version);//project_version 同上
     } finally {
       DbUtils.closeQuietly(connection);
     }

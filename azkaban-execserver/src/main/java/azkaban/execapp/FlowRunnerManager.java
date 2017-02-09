@@ -460,10 +460,10 @@ public class FlowRunnerManager implements EventListener,
           + execId);
     }
 
-    // Sets up the project files and execution directory.
+    // Sets up the project files and execution directory. 创建工程目录和执行目录
     setupFlow(flow);
 
-    // Setup flow runner
+    // Setup flow runner 创建FLOW运行器
     FlowWatcher watcher = null;
     ExecutionOptions options = flow.getExecutionOptions();
     if (options.getPipelineExecutionId() != null) {

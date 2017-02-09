@@ -57,13 +57,11 @@ public abstract class AzkabanServer {
    * @return
    */
   public static Props loadProps(String[] args, OptionParser parser) {
-    ;
     OptionSpec<String> configDirectory =
         parser
-            .acceptsAll(Arrays.asList("c", "conf"),
+            .acceptsAll(Arrays.asList("c", "conf"),  //OptionParser命令解析器
                 "The conf directory for Azkaban.").withRequiredArg()
             .describedAs("conf").ofType(String.class);
-
     // Grabbing the azkaban settings from the conf directory.
     Props azkabanSettings = null;
     OptionSet options = parser.parse(args);
@@ -123,10 +121,9 @@ public abstract class AzkabanServer {
    * @return
    */
   private static Props loadConfigurationFromAzkabanHome() {
-    //String azkabanHome = System.getenv("AZKABAN_HOME");
+    String azkabanHome = System.getenv("AZKABAN_HOME");
     //调试写死配置文件路径
-    String azkabanHome="/home/liyangzhou/java_code/azkaban_code/azkaban-webserver/src/main/resources";
-    String oracle = System.getenv("ORACLE_HOME");
+    //String azkabanHome="/home/liyangzhou/java_code/azkaban_code/azkaban-webserver/src/main/resources";
     if (azkabanHome == null) {
       logger.error("AZKABAN_HOME not set. Will try default.");
       return null;

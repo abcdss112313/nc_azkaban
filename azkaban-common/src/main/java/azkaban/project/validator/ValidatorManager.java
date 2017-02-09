@@ -32,7 +32,7 @@ public interface ValidatorManager {
    * @param projectDir
    * @return
    */
-  Map<String, ValidationReport> validate(Project project, File projectDir);
+  Map<String, ValidationReport>  validate(Project project, File projectDir);
 
   /**
    * The ValidatorManager should have a default validator which checks for the most essential

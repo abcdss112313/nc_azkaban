@@ -142,7 +142,7 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
     try {
       byte[] stringData = json.getBytes("UTF-8");
       data = stringData;
-
+      //数据压缩
       if (encType == EncodingType.GZIP) {
         data = GZIPUtils.gzipBytes(stringData);
       }
@@ -400,22 +400,6 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
   }
 
   @Override
-  public void addActiveExecutableReference(ExecutionReference reference)
-      throws ExecutorManagerException {
-    final String INSERT =
-        "INSERT INTO active_executing_flows "
-            + "(exec_id, update_time) values (?,?)";
-    QueryRunner runner = createQueryRunner();
-
-    try {
-      runner.update(INSERT, reference.getExecId(), reference.getUpdateTime());
-    } catch (SQLException e) {
-      throw new ExecutorManagerException(
-          "Error updating active flow reference " + reference.getExecId(), e);
-    }
-  }
-
-  @Override
   public void removeActiveExecutableReference(int execid)
       throws ExecutorManagerException {
     final String DELETE = "DELETE FROM active_executing_flows WHERE exec_id=?";
@@ -426,6 +410,22 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
     } catch (SQLException e) {
       throw new ExecutorManagerException(
           "Error deleting active flow reference " + execid, e);
+    }
+  }
+
+  @Override
+  public void addActiveExecutableReference(ExecutionReference reference)
+          throws ExecutorManagerException {
+    final String INSERT =
+            "INSERT INTO active_executing_flows "
+                    + "(exec_id, update_time) values (?,?)";
+    QueryRunner runner = createQueryRunner();
+
+    try {
+      runner.update(INSERT, reference.getExecId(), reference.getUpdateTime());
+    } catch (SQLException e) {
+      throw new ExecutorManagerException(
+              "Error updating active flow reference " + reference.getExecId(), e);
     }
   }
 

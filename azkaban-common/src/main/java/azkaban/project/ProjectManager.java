@@ -457,14 +457,14 @@ public class ProjectManager {
       throws ProjectManagerException {
     logger.info("Uploading files to " + project.getName());
 
-    // Unzip.
+    // 解压
     File file = null;
     try {
       if (fileType == null) {
         throw new ProjectManagerException("Unknown file type for "
             + archive.getName());
       } else if ("zip".equals(fileType)) {
-        file = unzipFile(archive);
+        file = unzipFile(archive);//解压文件
       } else {
         throw new ProjectManagerException("Unsupported archive type for file "
             + archive.getName());
@@ -481,7 +481,7 @@ public class ProjectManager {
     Props prop = new Props(props);
     prop.putAll(additionalProps);
     prop.put(ValidatorConfigs.PROJECT_ARCHIVE_FILE_PATH,
-        archive.getAbsolutePath());
+        archive.getAbsolutePath());//将文件上传路径 也放入到PROP中
     // Basically, we want to make sure that for different invocations to the
     // uploadProject method,
     // the validators are using different values for the
@@ -524,7 +524,7 @@ public class ProjectManager {
     }
 
     DirectoryFlowLoader loader =
-        (DirectoryFlowLoader) validatorManager.getDefaultValidator();
+        (DirectoryFlowLoader) validatorManager.getDefaultValidator(); //此处处理很多东西，包括依赖关系，加载配置文件等
     Map<String, Props> jobProps = loader.getJobProps();
     List<Props> propProps = loader.getProps();
 
@@ -538,23 +538,23 @@ public class ProjectManager {
 
       logger.info("Uploading file to db " + archive.getName());
       projectLoader.uploadProjectFile(project, newVersion, fileType,
-          archive.getName(), archive, uploader.getUserId());
+          archive.getName(), archive, uploader.getUserId());//JDBC操作，project_files
       logger.info("Uploading flow to db " + archive.getName());
-      projectLoader.uploadFlows(project, newVersion, flows.values());
+      projectLoader.uploadFlows(project, newVersion, flows.values());//jdbc操作，project_flows
       logger.info("Changing project versions " + archive.getName());
       projectLoader.changeProjectVersion(project, newVersion,
-          uploader.getUserId());
+          uploader.getUserId());//jdbc操作，更新projects表的version字段
       project.setFlows(flows);
       logger.info("Uploading Job properties");
       projectLoader.uploadProjectProperties(project, new ArrayList<Props>(
-          jobProps.values()));
+          jobProps.values()));//插入 project_properties
       logger.info("Uploading Props properties");
       projectLoader.uploadProjectProperties(project, propProps);
     }
 
     logger.info("Uploaded project files. Cleaning up temp files.");
     projectLoader.postEvent(project, EventType.UPLOADED, uploader.getUserId(),
-        "Uploaded project files zip " + archive.getName());
+        "Uploaded project files zip " + archive.getName());//插入表project_event记录上传行为
     try {
       FileUtils.deleteDirectory(file);
     } catch (IOException e) {
@@ -565,7 +565,7 @@ public class ProjectManager {
     logger.info("Cleaning up old install files older than "
         + (project.getVersion() - projectVersionRetention));
     projectLoader.cleanOlderProjectVersion(project.getId(),
-        project.getVersion() - projectVersionRetention);
+        project.getVersion() - projectVersionRetention);//清除旧版本数据，目前版本号-3
 
     return reports;
   }

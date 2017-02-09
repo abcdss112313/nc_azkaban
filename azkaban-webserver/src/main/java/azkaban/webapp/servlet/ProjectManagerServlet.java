@@ -168,6 +168,9 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
   }
 
   @Override
+  /**
+   * 项目flow流程上传
+   */
   protected void handleMultiformPost(HttpServletRequest req,
       HttpServletResponse resp, Map<String, Object> params, Session session)
       throws ServletException, IOException {
@@ -181,7 +184,7 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
         ajaxHandleUpload(req, ret, params, session);
       }
       this.writeJSON(resp, ret);
-    } else if (params.containsKey("action")) {
+    } else if (params.containsKey("action")) { //上传走这里
       String action = (String) params.get("action");
       if (action.equals("upload")) {
         handleUpload(req, resp, params, session);
@@ -1560,7 +1563,7 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
     String action = null;
     String message = null;
     HashMap<String, Object> params = null;
-
+    //这里有个参数，lockdownCreateProjects=false后不能再创建工程
     if (lockdownCreateProjects && !hasPermissionToCreateProject(user)) {
       message =
           "User " + user.getUserId()
@@ -1615,11 +1618,11 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
     } else {
       ret.put("projectId", String.valueOf(project.getId()));
 
-      FileItem item = (FileItem) multipart.get("file");
-      String name = item.getName();
+      FileItem item = (FileItem) multipart.get("file"); //上传文件用到的类
+      String name = item.getName(); //  用于获得文件上传字段中的文件名。
       String type = null;
 
-      final String contentType = item.getContentType();
+      final String contentType = item.getContentType(); // 用于获得上传文件的类型，即表单字段元素描述头属性“Content-Type”的值。
       if (contentType != null
           && (contentType.startsWith(APPLICATION_ZIP_MIME_TYPE)
               || contentType.startsWith("application/x-zip-compressed") || contentType
@@ -1632,9 +1635,9 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
         return;
       }
 
-      File tempDir = Utils.createTempDir();
+      File tempDir = Utils.createTempDir();//创建上传临时目录
       OutputStream out = null;
-      try {
+      try {  //文件上传到临时目录
         logger.info("Uploading file " + name);
         File archiveFile = new File(tempDir, name);
         out = new BufferedOutputStream(new FileOutputStream(archiveFile));
@@ -1643,7 +1646,7 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
 
         Map<String, ValidationReport> reports =
             projectManager.uploadProject(project, archiveFile, type, user,
-                props);
+                props); //文件解压，相关数据持久化处理
         StringBuffer errorMsgs = new StringBuffer();
         StringBuffer warnMsgs = new StringBuffer();
         for (Entry<String, ValidationReport> reportEntry : reports.entrySet()) {
@@ -1710,6 +1713,15 @@ public class ProjectManagerServlet extends LoginAbstractAzkabanServlet {
     }
   }
 
+  /**
+   * 上传工程FLOW
+   * @param req
+   * @param resp
+   * @param multipart
+   * @param session
+   * @throws ServletException
+   * @throws IOException
+   */
   private void handleUpload(HttpServletRequest req, HttpServletResponse resp,
       Map<String, Object> multipart, Session session) throws ServletException,
       IOException {

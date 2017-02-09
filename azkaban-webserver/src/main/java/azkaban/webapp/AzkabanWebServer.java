@@ -688,8 +688,8 @@ public class AzkabanWebServer extends AzkabanServer {
    */
   public static void main(String[] args) throws Exception {
     logger.info("Starting Jetty Azkaban Web Server...");
-
-    Props azkabanSettings = AzkabanServer.loadProps(args);
+    String [] argss = {"-conf","/home/liyangzhou/java_code/azkaban_code/azkaban-webserver/src/main/resources/conf"};
+    Props azkabanSettings = AzkabanServer.loadProps(argss);
 
     if (azkabanSettings == null) {
       logger.error("Azkaban Properties not loaded.");

@@ -600,7 +600,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     ret.put("failureEmails", options.getFailureEmails());
     ret.put("flowParam", options.getFlowParameters());
 
-    FailureAction action = options.getFailureAction();
+    FailureAction action = options.getFailureAction(); //失败机制
     String failureAction = null;
     switch (action) {
     case FINISH_CURRENTLY_RUNNING:
@@ -868,7 +868,7 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
     ExecutableFlow exflow = new ExecutableFlow(project, flow);
     exflow.setSubmitUser(user.getUserId());
     exflow.addAllProxyUsers(project.getProxyUsers());
-
+    //解析参数，覆盖原配置文件中的设置
     ExecutionOptions options = HttpRequestUtils.parseFlowOptions(req);
     exflow.setExecutionOptions(options);
     if (!options.isFailureEmailsOverridden()) {
@@ -881,6 +881,8 @@ public class ExecutorServlet extends LoginAbstractAzkabanServlet {
 
     try {
       HttpRequestUtils.filterAdminOnlyFlowParams(userManager, options, user);
+
+      //准备就绪，提交flow
       String message =
           executorManager.submitExecutableFlow(exflow, user.getUserId());
       ret.put("message", message);
