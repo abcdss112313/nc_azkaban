@@ -519,6 +519,9 @@ public class FlowRunnerManager implements EventListener,
       // The submit method below actually returns an instance of FutureTask,
       // which implements interface RunnableFuture, which extends both
       // Runnable and Future interfaces
+      //Future就是对于具体的Runnable或者Callable任务的执行结果进行
+      //取消、查询是否完成、获取结果、设置结果操作。
+      //RunnableFuture实现了Runnbale又实现了Futrue<V>这两个接口,后续在研究
       Future<?> future = executorService.submit(runner);
       // keep track of this future
       submittedFlows.put(future, runner.getExecutionId());
@@ -549,7 +552,7 @@ public class FlowRunnerManager implements EventListener,
 
   }
 
-  private void setupFlow(ExecutableFlow flow) throws ExecutorManagerException {
+  private void  setupFlow(ExecutableFlow flow) throws ExecutorManagerException {
     int execId = flow.getExecutionId();
     File execPath = new File(executionDirectory, String.valueOf(execId));
     flow.setExecutionPath(execPath.getPath());
@@ -558,7 +561,7 @@ public class FlowRunnerManager implements EventListener,
     execPath.mkdirs();
 
     // We're setting up the installed projects. First time, it may take a while
-    // to set up.
+    // to set up. 安装project
     Pair<Integer, Integer> projectVersionKey =
         new Pair<Integer, Integer>(flow.getProjectId(), flow.getVersion());
 

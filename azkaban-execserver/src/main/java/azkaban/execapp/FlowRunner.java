@@ -368,21 +368,21 @@ public class FlowRunner extends EventHandler implements Runnable {
    */
   private void runFlow() throws Exception {
     logger.info("Starting flows");
-    runReadyJob(this.flow);
-    updateFlow();
+    runReadyJob(this.flow);//判断任务是否已经完成或者已经运行，只有未完成任务才能重新启动
+    updateFlow();//更新数据库execution_flows信息
 
     while (!flowFinished) {
       synchronized (mainSyncObj) {
         if (flowPaused) {
           try {
-            mainSyncObj.wait(CHECK_WAIT_MS);
+            mainSyncObj.wait(CHECK_WAIT_MS);//暂停默认时间5分钟？？？
           } catch (InterruptedException e) {
           }
 
           continue;
         } else {
           if (retryFailedJobs) {
-            retryAllFailures();
+            retryAllFailures(); //任务错误重试
           } else if (!progressGraph()) {
             try {
               mainSyncObj.wait(CHECK_WAIT_MS);

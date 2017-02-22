@@ -76,9 +76,17 @@ public class ExecutorServlet extends HttpServlet implements ConnectorParams {
     mapper.writeValue(stream, obj);
   }
 
+  /**
+   * 远程调用走这里了
+   * @param req
+   * @param resp
+   * @throws ServletException
+   * @throws IOException
+   */
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
+    System.out.println("YES,that i am coming to execuing ways=====================");
     HashMap<String, Object> respMap = new HashMap<String, Object>();
     // logger.info("ExecutorServer called by " + req.getRemoteAddr());
     try {
@@ -261,7 +269,7 @@ public class ExecutorServlet extends HttpServlet implements ConnectorParams {
   private void handleAjaxExecute(HttpServletRequest req,
       Map<String, Object> respMap, int execId) throws ServletException {
     try {
-      flowRunnerManager.submitFlow(execId);
+      flowRunnerManager.submitFlow(execId);//本地manager处理
     } catch (ExecutorManagerException e) {
       e.printStackTrace();
       logger.error(e);

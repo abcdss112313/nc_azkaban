@@ -1033,7 +1033,7 @@ public class ExecutorManager extends EventHandler implements
         if (isMultiExecutorMode()) { //多核模式下 多个执行器
           //Take MultiExecutor route
           executorLoader.addActiveExecutableReference(reference);
-          queuedFlows.enqueue(exflow, reference);
+          queuedFlows.enqueue(exflow, reference);//缓存到本地
         } else {
           // assign only local executor we have
           Executor choosenExecutor = activeExecutors.iterator().next();
@@ -1148,7 +1148,7 @@ public class ExecutorManager extends EventHandler implements
 
   /*
    * Helper method used by ExecutorManager to call executor and return raw json
-   * string
+   * 任务实际分发过程
    */
   private String callExecutorForJsonString(String host, int port, String path,
     List<Pair<String, String>> paramList) throws IOException {
