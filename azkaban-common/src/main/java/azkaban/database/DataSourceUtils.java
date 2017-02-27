@@ -32,7 +32,8 @@ import azkaban.utils.Props;
 
 /**
  * DatasourceUTILs
- * 后期需要改造的类，需要增加ORACLE连接的datasource
+ * @author liyangzhou
+ *   增加了oracle数据库链接
  */
 public class DataSourceUtils {
 
@@ -90,6 +91,16 @@ public class DataSourceUtils {
       dataSource = getH2DataSource(path);
     } else if (databaseType.equals("oracle")){
       //oracle 数据源连接配置此处添加
+      int port = props.getInt("oracle.port");
+      String host = props.getString("oracle.host");
+      String database = props.getString("oracle.database");
+      String user = props.getString("oracle.user");
+      String password = props.getString("oracle.password");
+      int numConnections = props.getInt("oracle.numconnections");
+
+      dataSource =
+              getOracleDataSource(host, port, database, user, password,
+                      numConnections);
     }
 
     return dataSource;
@@ -111,6 +122,22 @@ public class DataSourceUtils {
     return new MySQLBasicDataSource(host, port, dbName, user, password,
         numConnections);
   }
+  /**
+   * Create a Oracle DataSource
+   * @author liyangzhou
+   * @param host
+   * @param port
+   * @param dbName
+   * @param user
+   * @param password
+   * @param numConnections
+   * @return
+   */
+  public static AzkabanDataSource getOracleDataSource(String host, Integer port,
+                                                     String dbName, String user, String password, Integer numConnections) {
+    return new OracleBasicDataSource(host, port, dbName, user, password,
+            numConnections);
+  }
 
   /**
    * Create H2 DataSource
@@ -126,6 +153,100 @@ public class DataSourceUtils {
    * Hidden datasource
    */
   private DataSourceUtils() {
+  }
+
+  /**
+   * oracle data source based on AzkabanDataSource
+   *@author liyangzhou
+   */
+  public static class OracleBasicDataSource extends AzkabanDataSource {
+
+    private static MonitorThread monitorThread = null;
+
+    private OracleBasicDataSource(String host, int port, String dbName,
+                                 String user, String password, int numConnections) {
+      super();
+
+      String url = "jdbc:oracle:thin:@" + (host + ":" + port + ":" + dbName);
+      addConnectionProperty("useUnicode", "yes");
+      addConnectionProperty("characterEncoding", "UTF-8");
+      setDriverClassName("oracle.jdbc.driver.OracleDriver");
+      setUsername(user);
+      setPassword(password);
+      setUrl(url);
+      setMaxActive(numConnections);
+      setValidationQuery("/* ping */ select 1 from dual");
+      setTestOnBorrow(true);
+
+      if (monitorThread == null) {
+        monitorThread = new MonitorThread(this);
+        monitorThread.start();
+      }
+    }
+
+    @Override
+    public boolean allowsOnDuplicateKey() {
+      return true;
+    }
+
+    @Override
+    public String getDBType() {
+      return "mysql";
+    }
+
+    //add by liyangzhou ,添加没有实现的抽象类方法，避免报错
+    @Override
+    public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
+      return null;
+    }
+
+    //此处有一个监听程序
+    private class MonitorThread extends Thread {
+      private static final long MONITOR_THREAD_WAIT_INTERVAL_MS = 30 * 1000;
+      private boolean shutdown = false;
+      OracleBasicDataSource dataSource;
+
+      public MonitorThread(OracleBasicDataSource oracleSource) {
+        this.setName("ORACLE-DB-Monitor-Thread");
+        dataSource = oracleSource;
+      }
+
+      @SuppressWarnings("unused")
+      public void shutdown() {
+        shutdown = true;
+        this.interrupt();
+      }
+
+      public void run() {
+        while (!shutdown) {
+          synchronized (this) {
+            try {
+              pingDB();
+              wait(MONITOR_THREAD_WAIT_INTERVAL_MS);
+            } catch (InterruptedException e) {
+              logger.info("Interrupted. Probably to shut down.");
+            }
+          }
+        }
+      }
+
+      private void pingDB() {
+        Connection connection = null;
+        try {
+          connection = dataSource.getConnection();
+          PreparedStatement query = connection.prepareStatement("SELECT 1 from dual");
+          query.execute();
+        } catch (SQLException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+          logger
+                  .error("Oracle connection test failed. Please check Oracle connection health!");
+        } finally {
+          DbUtils.closeQuietly(connection);
+        }
+      }
+    }
+
   }
 
   /**

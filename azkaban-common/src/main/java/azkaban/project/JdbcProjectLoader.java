@@ -307,8 +307,8 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
     // Insert project
     try {
       long time = System.currentTimeMillis();
-      int i =
-          runner.update(connection, INSERT_PROJECT, name, true, time, time,
+      int i =  //修改active为0
+          runner.update(connection, INSERT_PROJECT, name, 0, time, time,
               null, creator.getUserId(), description,
               defaultEncodingType.getNumVal(), null);
       if (i == 0) {
@@ -391,8 +391,9 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
     logger.info("Md5 hash created");
     // Really... I doubt we'll get a > 2gig file. So int casting it is!
     byte[] buffer = new byte[CHUCK_SIZE];
+    //这里size和file是关键字，所以加了下划线区分
     final String INSERT_PROJECT_FILES =
-        "INSERT INTO project_files (project_id, version, chunk, size, file) values (?,?,?,?,?)";
+        "INSERT INTO project_files (project_id, version, chunk, size_, file_) values (?,?,?,?,?)";
 
     BufferedInputStream bufferedStream = null;
     int chunk = 0;
@@ -575,6 +576,21 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
     }
   }
 
+  /**
+   * add by liyangzhou
+   */
+  private static class IntHandler2 implements ResultSetHandler<Integer> {
+    private static String CHECK_PROJECT_PERSSION_COUNT =
+            "SELECT COUNT(1) FROM project_permissions WHERE project_id=?";
+    @Override
+    public Integer handle(ResultSet rs) throws SQLException {
+      if (!rs.next()) {
+        return 0;
+      }
+      return rs.getInt(1);
+    }
+  }
+
   @Override
   public void updatePermission(Project project, String name, Permission perm,
       boolean isGroup) throws ProjectManagerException {
@@ -582,13 +598,23 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
 
     if (this.allowsOnDuplicateKey()) {
       long updateTime = System.currentTimeMillis();
-      final String INSERT_PROJECT_PERMISSION =
+      //更新Project的权限，插入项目权限表，需要修改以下sql
+     /* final String INSERT_PROJECT_PERMISSION =
           "INSERT INTO project_permissions (project_id, modified_time, name, permissions, isGroup) values (?,?,?,?,?)"
-              + "ON DUPLICATE KEY UPDATE modified_time = VALUES(modified_time), permissions = VALUES(permissions)";
+              + "ON DUPLICATE KEY UPDATE modified_time = VALUES(modified_time), permissions = VALUES(permissions)";*/
+      final String INSERT_PROJECT_PERMISSION =
+              "INSERT INTO project_permissions (project_id, modified_time, name, permissions, isGroup) values (?,?,?,?,?)";
 
+      final String UPDATE_PROJECT_PERSSION="UPDATE  project_permissions SET modified_time=?,permissions=? WHERE project_id=?";
       try {
-        runner.update(INSERT_PROJECT_PERMISSION, project.getId(), updateTime,
-            name, perm.toFlags(), isGroup);
+        IntHandler2 intHandler = new IntHandler2();
+        int i = runner.query(IntHandler2.CHECK_PROJECT_PERSSION_COUNT,intHandler,project.getId());
+        if(i==0) {
+          runner.update(INSERT_PROJECT_PERMISSION, project.getId(), updateTime,
+                  name, perm.toFlags(), isGroup);
+        }else{
+          runner.update(UPDATE_PROJECT_PERSSION,  updateTime,perm.toFlags(),project.getId());
+        }
       } catch (SQLException e) {
         logger.error(e);
         throw new ProjectManagerException("Error updating project "
@@ -1205,12 +1231,11 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
 
     private static String SELECT_PROJECT_BY_ID =
         "SELECT id, name, active, modified_time, create_time, version, last_modified_by, description, enc_type, settings_blob FROM projects WHERE id=?";
-
+    /*修改了projects表结构中active的默认值为0 0 表示可用*/
     private static String SELECT_ALL_ACTIVE_PROJECTS =
-        "SELECT id, name, active, modified_time, create_time, version, last_modified_by, description, enc_type, settings_blob FROM projects WHERE active=true";
-
+            "SELECT id, name, active, modified_time, create_time, version, last_modified_by, description, enc_type, settings_blob FROM projects WHERE active=0";
     private static String SELECT_ACTIVE_PROJECT_BY_NAME =
-        "SELECT id, name, active, modified_time, create_time, version, last_modified_by, description, enc_type, settings_blob FROM projects WHERE name=? AND active=true";
+        "SELECT id, name, active, modified_time, create_time, version, last_modified_by, description, enc_type, settings_blob FROM projects WHERE name=? AND active=0";
 
     @Override
     public List<Project> handle(ResultSet rs) throws SQLException {
@@ -1425,7 +1450,7 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
   private static class ProjectFileChunkResultHandler implements
       ResultSetHandler<List<byte[]>> {
     private static String SELECT_PROJECT_CHUNKS_FILE =
-        "SELECT project_id, version, chunk, size, file FROM project_files WHERE project_id=? AND version=? AND chunk >= ? AND chunk < ? ORDER BY chunk ASC";
+        "SELECT project_id, version, chunk, size_, file_ FROM project_files WHERE project_id=? AND version=? AND chunk >= ? AND chunk < ? ORDER BY chunk ASC";
 
     @Override
     public List<byte[]> handle(ResultSet rs) throws SQLException {

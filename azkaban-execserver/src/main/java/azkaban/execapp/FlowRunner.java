@@ -258,7 +258,7 @@ public class FlowRunner extends EventHandler implements Runnable {
 
     // If there are flow overrides, we apply them now.
     Map<String, String> flowParam =
-        flow.getExecutionOptions().getFlowParameters();
+            flow.getExecutionOptions().getFlowParameters();
     if (flowParam != null && !flowParam.isEmpty()) {
       commonFlowProps = new Props(commonFlowProps, flowParam);
     }
@@ -273,10 +273,10 @@ public class FlowRunner extends EventHandler implements Runnable {
 
     logger.info("Assigned executor : " + AzkabanExecutorServer.getApp().getExecutorHostPort());
     logger.info("Running execid:" + execId + " flow:" + flowId + " project:"
-        + projectId + " version:" + version);
+            + projectId + " version:" + version);
     if (pipelineExecId != null) {
       logger.info("Running simulateously with " + pipelineExecId
-          + ". Pipelining level " + pipelineLevel);
+              + ". Pipelining level " + pipelineLevel);
     }
 
     // The current thread is used for interrupting blocks

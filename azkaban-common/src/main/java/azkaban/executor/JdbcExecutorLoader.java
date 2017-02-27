@@ -262,65 +262,125 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
     }
   }
 
+  /**
+   * 变更oracle分页方法
+   * @param projectId
+   * @param flowId
+   * @param skip
+   * @param num
+   * @return
+   * @throws ExecutorManagerException
+   */
   @Override
   public List<ExecutableFlow> fetchFlowHistory(int projectId, String flowId,
       int skip, int num) throws ExecutorManagerException {
     QueryRunner runner = createQueryRunner();
+    int oracle_skip = 0;
+    if(skip==0){
+      oracle_skip=0;
+    }else{
+      oracle_skip=skip+1;
+    }
     FetchExecutableFlows flowHandler = new FetchExecutableFlows();
 
     try {
       List<ExecutableFlow> properties =
           runner.query(FetchExecutableFlows.FETCH_EXECUTABLE_FLOW_HISTORY,
-              flowHandler, projectId, flowId, skip, num);
+              flowHandler, projectId, flowId, skip+num, oracle_skip);
       return properties;
     } catch (SQLException e) {
       throw new ExecutorManagerException("Error fetching active flows", e);
     }
   }
 
+  /**
+   * 变更oracle分页
+   * @author liyangzhou
+   * @param projectId
+   * @param flowId
+   * @param skip
+   * @param num
+   * @param status
+   * @return
+   * @throws ExecutorManagerException
+   */
   @Override
   public List<ExecutableFlow> fetchFlowHistory(int projectId, String flowId,
       int skip, int num, Status status) throws ExecutorManagerException {
     QueryRunner runner = createQueryRunner();
+    int oracle_skip = 0;
+    if(skip==0){
+      oracle_skip=0;
+    }else{
+      oracle_skip=skip+1;
+    }
     FetchExecutableFlows flowHandler = new FetchExecutableFlows();
 
     try {
       List<ExecutableFlow> properties =
           runner.query(FetchExecutableFlows.FETCH_EXECUTABLE_FLOW_BY_STATUS,
-              flowHandler, projectId, flowId, status.getNumVal(), skip, num);
+              flowHandler, projectId, flowId, status.getNumVal(), skip+num, oracle_skip);
       return properties;
     } catch (SQLException e) {
       throw new ExecutorManagerException("Error fetching active flows", e);
     }
   }
 
+  /**
+   * 变更oracle分页
+   * @author liyangzhou
+   * @param skip
+   * @param num
+   * @return
+   * @throws ExecutorManagerException
+   */
   @Override
   public List<ExecutableFlow> fetchFlowHistory(int skip, int num)
       throws ExecutorManagerException {
     QueryRunner runner = createQueryRunner();
-
+    int oracle_skip = 0;
+    if(skip==0){
+      oracle_skip=0;
+    }else{
+      oracle_skip=skip+1;
+    }
     FetchExecutableFlows flowHandler = new FetchExecutableFlows();
 
     try {
       List<ExecutableFlow> properties =
           runner.query(FetchExecutableFlows.FETCH_ALL_EXECUTABLE_FLOW_HISTORY,
-              flowHandler, skip, num);
+              flowHandler, skip+num, oracle_skip);
       return properties;
     } catch (SQLException e) {
       throw new ExecutorManagerException("Error fetching active flows", e);
     }
   }
 
+  /**
+   * ORACLE分页变更
+   * @author liyangzhou
+   * @param projContain
+   * @param flowContains
+   * @param userNameContains
+   * @param status
+   * @param startTime
+   * @param endTime
+   * @param skip
+   * @param num
+   * @return
+   * @throws ExecutorManagerException
+   */
   @Override
   public List<ExecutableFlow> fetchFlowHistory(String projContain,
       String flowContains, String userNameContains, int status, long startTime,
       long endTime, int skip, int num) throws ExecutorManagerException {
-    String query = FetchExecutableFlows.FETCH_BASE_EXECUTABLE_FLOW_QUERY;
+    //String query = FetchExecutableFlows.FETCH_BASE_EXECUTABLE_FLOW_QUERY; 高级查询有点问题，修改了下
+    String query = "SELECT ef.exec_id, ef.enc_type, ef.flow_data FROM execution_flows";
     ArrayList<Object> params = new ArrayList<Object>();
 
     boolean first = true;
     if (projContain != null && !projContain.isEmpty()) {
-      query += " ef JOIN projects p ON ef.project_id = p.id WHERE name LIKE ?";
+      query += " ef INNER JOIN projects p ON ef.project_id = p.id WHERE name LIKE ?";
       params.add('%' + projContain + '%');
       first = false;
     }
@@ -381,10 +441,17 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
       params.add(endTime);
     }
 
-    if (skip > -1 && num > 0) {
-      query += "  ORDER BY exec_id DESC LIMIT ?, ?";
-      params.add(skip);
-      params.add(num);
+    if (skip > -1 && num > 0) {//ORACLE分页改造
+      query ="SELECT * FROM (SELECT T1.*,ROWNUM RN FROM ("+ query +" ORDER BY exec_id DESC) T1 WHERE ROWNUM<=?) WHERE RN>=?";
+     // query += "  ORDER BY exec_id DESC LIMIT ?, ?";
+      int oracle_skip = 0;
+      if(skip==0){
+        oracle_skip=0;
+      }else{
+        oracle_skip=skip+1;
+      }
+      params.add(skip+num);
+      params.add(oracle_skip);
     }
 
     QueryRunner runner = createQueryRunner();
@@ -604,11 +671,19 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
   public List<ExecutableJobInfo> fetchJobHistory(int projectId, String jobId,
       int skip, int size) throws ExecutorManagerException {
     QueryRunner runner = createQueryRunner();
-
+    int oracle_skip = 0;
+    if(skip==0){
+      oracle_skip=0;
+    }else{
+      oracle_skip=skip+1;
+    }
     try {
-      List<ExecutableJobInfo> info =
+     /* List<ExecutableJobInfo> info =
           runner.query(FetchExecutableJobHandler.FETCH_PROJECT_EXECUTABLE_NODE,
-              new FetchExecutableJobHandler(), projectId, jobId, skip, size);
+              new FetchExecutableJobHandler(), projectId, jobId, skip, size); 更换为oracle的分页,oracle的rownum为size*/
+      List<ExecutableJobInfo> info =
+              runner.query(FetchExecutableJobHandler.FETCH_PROJECT_EXECUTABLE_NODE,
+                      new FetchExecutableJobHandler(), projectId, jobId, skip+size, oracle_skip);
       if (info == null || info.isEmpty()) {
         return null;
       }
@@ -692,6 +767,7 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
     int length = buffer.length;
     int startByte = 0;
     try {
+      System.out.println("进入方法。。。。。。。。。。。。");
       for (int i = 0; i < files.length; ++i) {
         File file = files[i];
 
@@ -722,8 +798,10 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
 
       // Final commit of buffer.
       if (pos > 0) {
+        System.out.println("开始书写日志。。。。。。。。。。。。。。。");
         uploadLogPart(connection, execId, name, attempt, startByte, startByte
             + pos, encType, buffer, pos);
+
       }
     } catch (SQLException e) {
       throw new ExecutorManagerException("Error writing log part.", e);
@@ -736,7 +814,7 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
       int attempt, int startByte, int endByte, EncodingType encType,
       byte[] buffer, int length) throws SQLException, IOException {
     final String INSERT_EXECUTION_LOGS =
-        "INSERT INTO execution_logs "
+          "INSERT INTO execution_logs "
             + "(exec_id, name, attempt, enc_type, start_byte, end_byte, "
             + "log, upload_time) VALUES (?,?,?,?,?,?,?,?)";
 
@@ -987,7 +1065,7 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
     try {
       events =
         runner.query(ExecutorLogsResultHandler.SELECT_EXECUTOR_EVENTS_ORDER,
-          logHandler, executor.getId(), num, offset);
+          logHandler, executor.getId(), num+offset, offset+1); //oracle分页变更
     } catch (SQLException e) {
       throw new ExecutorManagerException(
         "Failed to fetch events for executor id : " + executor.getId(), e);
@@ -1056,8 +1134,8 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
   }
 
   private static class LastInsertID implements ResultSetHandler<Long> {
-    private static String LAST_INSERT_ID = "SELECT LAST_INSERT_ID()";
-
+    //序列变更为oracle的 private static String LAST_INSERT_ID = "SELECT LAST_INSERT_ID()";
+    private static String LAST_INSERT_ID = "SELECT EXECUTION_FLOWS_EXEC_ID_SEQ.CURRVAL FROM DUAL";
     @Override
     public Long handle(ResultSet rs) throws SQLException {
       if (!rs.next()) {
@@ -1139,12 +1217,21 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
         "SELECT exec_id, project_id, version, flow_id, job_id, "
             + "start_time, end_time, status, attempt FROM execution_jobs "
             + "WHERE exec_id=? AND job_id=?";
-    private static String FETCH_PROJECT_EXECUTABLE_NODE =
+    //修改为ORACLE分页,oracle的大的rownum=size+
+    /*private static String FETCH_PROJECT_EXECUTABLE_NODE =
         "SELECT exec_id, project_id, version, flow_id, job_id, "
             + "start_time, end_time, status, attempt FROM execution_jobs "
             + "WHERE project_id=? AND job_id=? "
-            + "ORDER BY exec_id DESC LIMIT ?, ? ";
-
+            + "ORDER BY exec_id DESC LIMIT ?, ? ";*/
+    private static String FETCH_PROJECT_EXECUTABLE_NODE =
+            "SELECT * FROM " +
+                    "(SELECT T1.*,ROWNUM RN FROM " +
+                    "(SELECT exec_id, project_id, version, flow_id, job_id, "
+                    + "start_time, end_time, status, attempt FROM execution_jobs "
+                    + "WHERE project_id=? AND job_id=? "
+                    + "ORDER BY exec_id DESC)" +
+                    "T1 WHERE ROWNUM<=?) " +
+                    "WHERE RN>=? ";
     @Override
     public List<ExecutableJobInfo> handle(ResultSet rs) throws SQLException {
       if (!rs.next()) {
@@ -1387,6 +1474,10 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
     }
   }
 
+  /**
+   * 分页改造
+   * @author liyangzhou
+   */
   private static class FetchExecutableFlows implements
       ResultSetHandler<List<ExecutableFlow>> {
     private static String FETCH_BASE_EXECUTABLE_FLOW_QUERY =
@@ -1399,17 +1490,29 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
     // +
     // "FROM execution_flows ex " +
     // "INNER JOIN active_executing_flows ax ON ex.exec_id = ax.exec_id";
-    private static String FETCH_ALL_EXECUTABLE_FLOW_HISTORY =
+    /*private static String FETCH_ALL_EXECUTABLE_FLOW_HISTORY =
         "SELECT exec_id, enc_type, flow_data FROM execution_flows "
-            + "ORDER BY exec_id DESC LIMIT ?, ?";
-    private static String FETCH_EXECUTABLE_FLOW_HISTORY =
+            + "ORDER BY exec_id DESC LIMIT ?, ?";*/
+    private static String FETCH_ALL_EXECUTABLE_FLOW_HISTORY =
+            "SELECT * FROM (SELECT T1.*,ROWNUM RN FROM (SELECT exec_id, enc_type, flow_data FROM execution_flows "
+                    + "ORDER BY exec_id DESC) T1 WHERE ROWNUM<=?) WHERE RN>=?";
+
+   /* private static String FETCH_EXECUTABLE_FLOW_HISTORY =
         "SELECT exec_id, enc_type, flow_data FROM execution_flows "
             + "WHERE project_id=? AND flow_id=? "
-            + "ORDER BY exec_id DESC LIMIT ?, ?";
-    private static String FETCH_EXECUTABLE_FLOW_BY_STATUS =
+            + "ORDER BY exec_id DESC LIMIT ?, ?";*/
+   private static String FETCH_EXECUTABLE_FLOW_HISTORY =
+           "SELECT * FROM (SELECT T1.*,ROWNUM RN FROM  (SELECT exec_id, enc_type, flow_data FROM execution_flows "
+                   + "WHERE project_id=? AND flow_id=? "
+                   + "ORDER BY exec_id DESC) T1 WHERE ROWNUM<=?) WHERE RN >=?";
+    /*private static String FETCH_EXECUTABLE_FLOW_BY_STATUS =
         "SELECT exec_id, enc_type, flow_data FROM execution_flows "
             + "WHERE project_id=? AND flow_id=? AND status=? "
-            + "ORDER BY exec_id DESC LIMIT ?, ?";
+            + "ORDER BY exec_id DESC LIMIT ?, ?";*/
+    private static String FETCH_EXECUTABLE_FLOW_BY_STATUS =
+            "SELECT * FROM (SELECT T1.*,ROWNUM RN FROM  (SELECT exec_id, enc_type, flow_data FROM execution_flows "
+                    + "WHERE project_id=? AND flow_id=? AND status=? "
+                    + "ORDER BY exec_id DESC) T1 WHERE R1.ROWNUM<=?) WHERE RN>=?";
 
     @Override
     public List<ExecutableFlow> handle(ResultSet rs) throws SQLException {
@@ -1532,10 +1635,12 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
    */
   private static class ExecutorLogsResultHandler implements
     ResultSetHandler<List<ExecutorLogEvent>> {
-    private static String SELECT_EXECUTOR_EVENTS_ORDER =
+   /* private static String SELECT_EXECUTOR_EVENTS_ORDER =
       "SELECT executor_id, event_type, event_time, username, message FROM executor_events "
-        + " WHERE executor_id=? ORDER BY event_time LIMIT ? OFFSET ?";
-
+        + " WHERE executor_id=? ORDER BY event_time LIMIT ? OFFSET ?"; 变更为Oracle分页*/
+   private static String SELECT_EXECUTOR_EVENTS_ORDER =
+           "SELECT * FROM (SELECT T1.*,ROWNUM RN FROM (SELECT executor_id, event_type, event_time, username, message FROM executor_events "
+                   + " WHERE executor_id=? ORDER BY event_time) T1 WHERE ROWNUM <=? ) WHERE RN>=?";
     @Override
     public List<ExecutorLogEvent> handle(ResultSet rs) throws SQLException {
       if (!rs.next()) {
