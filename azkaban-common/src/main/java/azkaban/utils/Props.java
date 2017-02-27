@@ -16,14 +16,7 @@
 
 package azkaban.utils;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -85,8 +78,8 @@ public class Props {
   public Props(Props parent, File file) throws IOException {
     this(parent);
     setSource(file.getPath());
-
     InputStream input = new BufferedInputStream(new FileInputStream(file));
+
     try {
       loadFrom(input);
     } catch (IOException e) {
@@ -109,13 +102,14 @@ public class Props {
   }
 
   /**
-   *
+   * 源码采用字节流读取，导致中文乱码，这里将字节流转换为字符流读取
    * @param inputStream
    * @throws IOException
    */
   private void loadFrom(InputStream inputStream) throws IOException {
     Properties properties = new Properties();
-    properties.load(inputStream);
+    BufferedReader bf = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+    properties.load(bf);
     this.put(properties);
   }
 
