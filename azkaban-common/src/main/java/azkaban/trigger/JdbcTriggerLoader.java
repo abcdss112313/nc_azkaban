@@ -252,7 +252,9 @@ public class JdbcTriggerLoader extends AbstractJdbcLoader implements
   }
 
   private static class LastInsertID implements ResultSetHandler<Long> {
-    private static String LAST_INSERT_ID = "SELECT LAST_INSERT_ID()";
+   // private static String LAST_INSERT_ID = "SELECT LAST_INSERT_ID()";
+    private static String LAST_INSERT_ID = "SELECT TRIGGERS_TRIGGER_ID_SEQ.Currval from dual";
+
 
     @Override
     public Long handle(ResultSet rs) throws SQLException {

@@ -303,7 +303,7 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
     }
 
     final String INSERT_PROJECT =
-        "INSERT INTO azkaban.projects ( name, active, modified_time, create_time, version, last_modified_by, description, enc_type, settings_blob) values (?,?,?,?,?,?,?,?,?)";
+        "INSERT INTO projects ( name, active, modified_time, create_time, version, last_modified_by, description, enc_type, settings_blob) values (?,?,?,?,?,?,?,?,?)";
     // Insert project
     try {
       long time = System.currentTimeMillis();
@@ -735,8 +735,9 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
     QueryRunner runner = createQueryRunner();
 
     long updateTime = System.currentTimeMillis();
+    //修改active=1 ，表示未启动
     final String UPDATE_INACTIVE_PROJECT =
-        "UPDATE projects SET active=false,modified_time=?,last_modified_by=? WHERE id=?";
+        "UPDATE projects SET active=1,modified_time=?,last_modified_by=? WHERE id=?";
     try {
       runner.update(UPDATE_INACTIVE_PROJECT, updateTime, user, project.getId());
     } catch (SQLException e) {
@@ -781,7 +782,7 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
     try {
       events =
           runner.query(ProjectLogsResultHandler.SELECT_PROJECT_EVENTS_ORDER,
-              logHandler, project.getId(), num, skip);
+              logHandler, project.getId(), num+skip, skip+1);
     } catch (SQLException e) {
       logger.error(e);
     }
@@ -1420,8 +1421,14 @@ public class JdbcProjectLoader extends AbstractJdbcLoader implements
 
   private static class ProjectLogsResultHandler implements
       ResultSetHandler<List<ProjectLogEvent>> {
+//    private static String SELECT_PROJECT_EVENTS_ORDER =   变更为oracle分页
+//        "SELECT project_id, event_type, event_time, username, message FROM project_events WHERE project_id=? ORDER BY event_time DESC LIMIT ? OFFSET ?";
     private static String SELECT_PROJECT_EVENTS_ORDER =
-        "SELECT project_id, event_type, event_time, username, message FROM project_events WHERE project_id=? ORDER BY event_time DESC LIMIT ? OFFSET ?";
+        "SELECT * FROM (SELECT T1.*,ROWNUM RN FROM (SELECT project_id, event_type, event_time," +
+                " username, message FROM project_events" +
+                " WHERE project_id=? ORDER BY event_time DESC)T1 WHERE ROWNUM<=?)" +
+                "WHERE RN>=?";
+
 
     @Override
     public List<ProjectLogEvent> handle(ResultSet rs) throws SQLException {

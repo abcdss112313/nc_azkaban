@@ -113,7 +113,7 @@ azkaban.FlowTableView = Backbone.View.extend({
         $(divRunJob).addClass("btn-success");
         $(divRunJob).addClass("btn-xs");
         $(divRunJob).addClass("runJob");
-        $(divRunJob).text("Run Job");
+        $(divRunJob).text("执行任务");
         divRunJob.jobName = name;
         divRunJob.flowId = flowId;
         $(hoverMenuDiv).append(divRunJob);
@@ -124,7 +124,7 @@ azkaban.FlowTableView = Backbone.View.extend({
         $(divRunWithDep).addClass("btn-success");
         $(divRunWithDep).addClass("btn-xs");
         $(divRunWithDep).addClass("runWithDep");
-        $(divRunWithDep).text("Run With Dependencies");
+        $(divRunWithDep).text("依赖执行");
         divRunWithDep.jobName = name;
         divRunWithDep.flowId = flowId;
         $(hoverMenuDiv).append(divRunWithDep);
