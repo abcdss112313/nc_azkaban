@@ -310,8 +310,8 @@ public class AzkabanExecutorServer {
    */
   public static void main(String[] args) throws Exception {
     logger.info("Starting Jetty Azkaban Executor...");
-    String [] argss = {"-conf","/home/liyangzhou/java_code/azkaban_code/azkaban-execserver/src/main/resources/conf"};
-    Props azkabanSettings = AzkabanServer.loadProps(argss);
+    //String [] argss = {"-conf","/home/liyangzhou/java_code/azkaban_code/azkaban-execserver/src/main/resources/conf"};
+    Props azkabanSettings = AzkabanServer.loadProps(args);
 
     if (azkabanSettings == null) {
       logger.error("Azkaban Properties not loaded.");
