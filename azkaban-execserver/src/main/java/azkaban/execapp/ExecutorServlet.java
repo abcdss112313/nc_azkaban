@@ -86,7 +86,6 @@ public class ExecutorServlet extends HttpServlet implements ConnectorParams {
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    System.out.println("YES,that i am coming to execuing ways=====================");
     HashMap<String, Object> respMap = new HashMap<String, Object>();
     // logger.info("ExecutorServer called by " + req.getRemoteAddr());
     try {

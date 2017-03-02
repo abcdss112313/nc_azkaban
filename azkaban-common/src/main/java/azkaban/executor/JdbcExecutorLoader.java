@@ -767,7 +767,6 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
     int length = buffer.length;
     int startByte = 0;
     try {
-      System.out.println("进入方法。。。。。。。。。。。。");
       for (int i = 0; i < files.length; ++i) {
         File file = files[i];
 
@@ -798,7 +797,6 @@ public class JdbcExecutorLoader extends AbstractJdbcLoader implements
 
       // Final commit of buffer.
       if (pos > 0) {
-        System.out.println("开始书写日志。。。。。。。。。。。。。。。");
         uploadLogPart(connection, execId, name, attempt, startByte, startByte
             + pos, encType, buffer, pos);
 
