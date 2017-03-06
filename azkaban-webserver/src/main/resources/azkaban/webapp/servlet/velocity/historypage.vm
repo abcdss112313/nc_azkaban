@@ -53,17 +53,17 @@
       <div class="container-full">
         <div class="row">
           <div class="header-title">
-            <h1><a href="${context}/history">History</a></h1>
+            <h1><a href="${context}/history">执行历史</a></h1>
           </div>
           <div class="header-control">
             <form id="search-form" method="get" class="form-inline header-form" role="form">
               <input type="hidden" name="search" value="true">
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" id="searchtextbox" placeholder="flow name containing ..." value=#if($search_term) "$esc.html(${search_term})" #else "" #end class="form-control input-sm" name="searchterm">
+                  <input type="text" id="searchtextbox" placeholder="工作流名称" value=#if($search_term) "$esc.html(${search_term})" #else "" #end class="form-control input-sm" name="searchterm">
                   <span class="input-group-btn">
-                    <button class="btn btn-primary btn-sm">Quick Search</button>
-                    <button type="button" class="btn btn-success btn-sm" id="adv-filter-btn">Advanced Filter</button>
+                    <button class="btn btn-primary btn-sm">快速查询</button>
+                    <button type="button" class="btn btn-success btn-sm" id="adv-filter-btn">高级查询</button>
                   </span>
                 </div>
               </div>
@@ -83,15 +83,15 @@
             <thead>
               <tr>
               	<th>#</th>
-                <th class="execid">Execution Id</th>
-                <th>Flow</th>
-                <th>Project</th>
-                <th>User</th>
-                <th class="date">Start Time</th>
-                <th class="date">End Time</th>
-                <th class="elapse">Elapsed</th>
-                <th class="status">Status</th>
-                <th class="action">Action</th>
+                <th class="execid">执行编号</th>
+                <th>工作流</th>
+                <th>工程名</th>
+                <th>执行用户</th>
+                <th class="date">开始时间</th>
+                <th class="date">结束时间</th>
+                <th class="elapse">耗时</th>
+                <th class="status">状态</th>
+                <!--<th class="action">操作</th>-->
               </tr>
             </thead>
             <tbody>
@@ -122,36 +122,36 @@
     #end
   #else
               <tr>
-                <td class="last" colspan="9">No History Results Found</td>
+                <td class="last" colspan="9">暂无数据</td>
               </tr>
   #end
             </tbody>
           </table>
           <ul class="pagination" id="pageSelection">
   #if ($search)
-            <li id="previous" class="first"><a href="${context}/history?page=${previous.page}&size=${previous.size}&search=true&searchterm=$esc.html(${search_term})"><span class="arrow">&larr;</span>Previous</a></li>
+            <li id="previous" class="first"><a href="${context}/history?page=${previous.page}&size=${previous.size}&search=true&searchterm=$esc.html(${search_term})"><span class="arrow">&larr;</span>上一页</a></li>
             <li id="page1" #if($page1.selected) class="selected" #end><a href="${context}/history?page=${page1.page}&size=${page1.size}&search=true&searchterm=$esc.html(${search_term})">${page1.page}</a></li>
             <li id="page2" #if($page2.selected) class="selected" #end><a href="${context}/history?page=${page2.page}&size=${page2.size}&search=true&searchterm=$esc.html(${search_term})">${page2.page}</a></li>
             <li id="page3" #if($page3.selected) class="selected" #end><a href="${context}/history?page=${page3.page}&size=${page3.size}&search=true&searchterm=$esc.html(${search_term})">${page3.page}</a></li>
             <li id="page4" #if($page4.selected) class="selected" #end><a href="${context}/history?page=${page4.page}&size=${page4.size}&search=true&searchterm=$esc.html(${search_term})">${page4.page}</a></li>
             <li id="page5" #if($page5.selected) class="selected" #end><a href="${context}/history?page=${page5.page}&size=${page5.size}&search=true&searchterm=$esc.html(${search_term})">${page5.page}</a></li>
-            <li id="next"><a href="${context}/history?page=${next.page}&size=${next.size}&search=true&searchterm=$esc.html(${search_term})">Next<span class="arrow">&rarr;</span></a></li>
+            <li id="next"><a href="${context}/history?page=${next.page}&size=${next.size}&search=true&searchterm=$esc.html(${search_term})">下一页<span class="arrow">&rarr;</span></a></li>
   #elseif($advfilter)
-            <li id="previous" class="first"><a href="${context}/history?page=${previous.page}&size=${previous.size}&advfilter=true&projcontain=${projcontain}&flowcontain=${flowcontain}&usercontain=${usercontain}&status=${status}&begin=${begin}&end=${end}"><span class="arrow">&larr;</span>Previous</a></li>
+            <li id="previous" class="first"><a href="${context}/history?page=${previous.page}&size=${previous.size}&advfilter=true&projcontain=${projcontain}&flowcontain=${flowcontain}&usercontain=${usercontain}&status=${status}&begin=${begin}&end=${end}"><span class="arrow">&larr;</span>上一页</a></li>
             <li id="page1" #if($page1.selected) class="selected" #end><a href="${context}/history?page=${page1.page}&size=${page1.size}&advfilter=true&projcontain=${projcontain}&flowcontain=${flowcontain}&usercontain=${usercontain}&status=${status}&begin=${begin}&end=${end}">${page1.page}</a></li>
             <li id="page2" #if($page2.selected) class="selected" #end><a href="${context}/history?page=${page2.page}&size=${page2.size}&advfilter=true&projcontain=${projcontain}&flowcontain=${flowcontain}&usercontain=${usercontain}&status=${status}&begin=${begin}&end=${end}">${page2.page}</a></li>
             <li id="page3" #if($page3.selected) class="selected" #end><a href="${context}/history?page=${page3.page}&size=${page3.size}&advfilter=true&projcontain=${projcontain}&flowcontain=${flowcontain}&usercontain=${usercontain}&status=${status}&begin=${begin}&end=${end}">${page3.page}</a></li>
             <li id="page4" #if($page4.selected) class="selected" #end><a href="${context}/history?page=${page4.page}&size=${page4.size}&advfilter=true&projcontain=${projcontain}&flowcontain=${flowcontain}&usercontain=${usercontain}&status=${status}&begin=${begin}&end=${end}">${page4.page}</a></li>
             <li id="page5" #if($page5.selected) class="selected" #end><a href="${context}/history?page=${page5.page}&size=${page5.size}&advfilter=true&projcontain=${projcontain}&flowcontain=${flowcontain}&usercontain=${usercontain}&status=${status}&begin=${begin}&end=${end}">${page5.page}</a></li>
-            <li id="next"><a href="${context}/history?page=${next.page}&size=${next.size}&advfilter=true&projcontain=${projcontain}&flowcontain=${flowcontain}&usercontain=${usercontain}&status=${status}&begin=${begin}&end=${end}">Next<span class="arrow">&rarr;</span></a></li>
+            <li id="next"><a href="${context}/history?page=${next.page}&size=${next.size}&advfilter=true&projcontain=${projcontain}&flowcontain=${flowcontain}&usercontain=${usercontain}&status=${status}&begin=${begin}&end=${end}">下一页<span class="arrow">&rarr;</span></a></li>
   #else
-            <li id="previous" class="first"><a href="${context}/history?page=${previous.page}&size=${previous.size}"><span class="arrow">&larr;</span>Previous</a></li>
+            <li id="previous" class="first"><a href="${context}/history?page=${previous.page}&size=${previous.size}"><span class="arrow">&larr;</span>上一页</a></li>
             <li id="page1" #if($page1.selected) class="selected" #end><a href="${context}/history?page=${page1.page}&size=${page1.size}">${page1.page}</a></li>
             <li id="page2" #if($page2.selected) class="selected" #end><a href="${context}/history?page=${page2.page}&size=${page2.size}">${page2.page}</a></li>
             <li id="page3" #if($page3.selected) class="selected" #end><a href="${context}/history?page=${page3.page}&size=${page3.size}">${page3.page}</a></li>
             <li id="page4" #if($page4.selected) class="selected" #end><a href="${context}/history?page=${page4.page}&size=${page4.size}">${page4.page}</a></li>
             <li id="page5" #if($page5.selected) class="selected" #end><a href="${context}/history?page=${page5.page}&size=${page5.size}">${page5.page}</a></li>
-            <li id="next"><a href="${context}/history?page=${next.page}&size=${next.size}">Next<span class="arrow">&rarr;</span></a></li>
+            <li id="next"><a href="${context}/history?page=${next.page}&size=${next.size}">下一页<span class="arrow">&rarr;</span></a></li>
   #end
           </ul>
         </div><!-- /col-xs-12 -->
@@ -164,31 +164,31 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Advanced Filter</h4>
+              <h4 class="modal-title">高级查询</h4>
             </div>
             <div class="modal-body">
               <div class="alert alert-danger" id="adv-filter-error-msg">$error_msg</div>
               <fieldset class="form-horizontal">
                 <div class="form-group">
-                  <label for="projcontain" class="col-sm-2 control-label">Project</label>
+                  <label for="projcontain" class="col-sm-2 control-label">工程名</label>
                   <div class="col-sm-10">
-                    <input id="projcontain" type="text" placeholder="Project name containing ..." value="" class="form-control" name="projcontain">
+                    <input id="projcontain" type="text" placeholder="请输入工程名" value="" class="form-control" name="projcontain">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="flowcontain" class="col-sm-2 control-label">Flow</label>
+                  <label for="flowcontain" class="col-sm-2 control-label">工作流</label>
                   <div class="col-sm-10">
-                    <input id="flowcontain" type="text" placeholder="Flow name containing ..." value="" class="form-control" name="flowcontain">
+                    <input id="flowcontain" type="text" placeholder="请输入工作流名称" value="" class="form-control" name="flowcontain">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="usercontain" class="col-sm-2 control-label">User</label>
+                  <label for="usercontain" class="col-sm-2 control-label">操作用户</label>
                   <div class="col-sm-10">
-                    <input id="usercontain" type="text" placeholder="User name containing ..." value="" class="form-control" name="usercontain">
+                    <input id="usercontain" type="text" placeholder="请输入用户名" value="" class="form-control" name="usercontain">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="status" class="col-sm-2 control-label">Status</label>
+                  <label for="status" class="col-sm-2 control-label">状态</label>
                   <div class="col-sm-10">
                     <select id="status" class="form-control">
                       <option value=0>All Status</option>
@@ -207,11 +207,11 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="datetimebegin" class="col-sm-2 control-label">Between</label>
+                  <label for="datetimebegin" class="col-sm-2 control-label">开始时间大于</label>
                   <div class="col-sm-4">
                     <input type="text" id="datetimebegin" value="" class="ui-datetime-container form-control">
                   </div>
-                  <label for="datetimeend" class="col-sm-2 control-label control-label-center">and</label>
+                  <label for="datetimeend" class="col-sm-2 control-label control-label-center">小于</label>
                   <div class="col-sm-4">
                     <input type="text" id="datetimeend" value="" class="ui-datetime-container form-control">
                   </div>
@@ -219,8 +219,8 @@
               </fieldset>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-              <button class="btn btn-success" id="filter-btn">Filter</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button class="btn btn-success" id="filter-btn">查询</button>
             </div>
           </div>
         </div>

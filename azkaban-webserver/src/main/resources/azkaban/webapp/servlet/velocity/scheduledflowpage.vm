@@ -73,15 +73,15 @@
               <tr>
                 <!--th class="execid">Execution Id</th-->
                 <th>#</th>
-                <th>ID</th>
-                <th>Flow</th>
-                <th>Project</th>
-                <th>Submitted By</th>
-                <th class="date">First Scheduled to Run</th>
-                <th class="date">Next Execution Time</th>
-                <th class="date">Repeats Every</th>
+                <th>编号</th>
+                <th>工作流</th>
+                <th>工程</th>
+                <th>提交人</th>
+                <th class="date">上次执行时间</th>
+                <th class="date">下次执行时间</th>
+                <th class="date">执行频率</th>
                 <th>Has SLA</th>
-                <th colspan="2" class="action ignoresort">Action</th>
+                <th colspan="2" class="action ignoresort">操作</th>
               </tr>
             </thead>
             <tbody>
@@ -103,13 +103,13 @@
                 <td>$utils.formatDateTime(${sched.nextExecTime})</td>
                 <td>$utils.formatPeriod(${sched.period})</td>
                 <td>#if(${sched.slaOptions}) true #else false #end</td>
-                <td><button type="button" id="removeSchedBtn" class="btn btn-sm btn-danger" onclick="removeSched(${sched.scheduleId})" >Remove Schedule</button></td>
-                <td><button type="button" id="addSlaBtn" class="btn btn-sm btn-primary" onclick="slaView.initFromSched(${sched.scheduleId}, '${sched.flowName}')" >Set SLA</button></td>
+                <td><button type="button" id="removeSchedBtn" class="btn btn-sm btn-danger" onclick="removeSched(${sched.scheduleId})" >移除调度计划</button></td>
+                <td><button type="button" id="addSlaBtn" class="btn btn-sm btn-primary" onclick="slaView.initFromSched(${sched.scheduleId}, '${sched.flowName}')" >设置SLA</button></td>
               </tr>
     #end
   #else
               <tr>
-                <td colspan="10">No scheduled flow found.</td>
+                <td colspan="10">暂无数据</td>
               </tr>
   #end
             </tbody>

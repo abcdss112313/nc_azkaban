@@ -67,11 +67,11 @@
       <div class="container-full">
         <div class="row">
           <div class="header-title">
-            <h1><a href="${context}/manager?project=${project.name}&flow=${flowid}">Flow <small>$flowid</small></a></h1>
+            <h1><a href="${context}/manager?project=${project.name}&flow=${flowid}">工作流 <small>$flowid</small></a></h1>
           </div>
           <div class="header-control">
             <div class="pull-right header-form">
-              <button type="button" class="btn btn-sm btn-success" id="executebtn">Schedule / Execute Flow</button>
+              <button type="button" class="btn btn-sm btn-success" id="executebtn">任务计划 / 手工执行</button>
             </div>
           </div>
         </div>
@@ -80,8 +80,8 @@
     <div class="page-breadcrumb">
       <div class="container-full">
         <ol class="breadcrumb">
-          <li><a href="${context}/manager?project=${project.name}"><strong>Project</strong> $project.name</a></li>
-          <li class="active"><strong>Flow</strong> $flowid</li>
+          <li><a href="${context}/manager?project=${project.name}"><strong>工程</strong> $project.name</a></li>
+          <li class="active"><strong>工作流</strong> $flowid</li>
         </ol>
       </div>
     </div>
@@ -93,9 +93,9 @@
   ## Tabs
 
       <ul class="nav nav-tabs nav-sm" id="headertabs">
-        <li id="graphViewLink"><a href="#graph">Graph</a></li>
-        <li id="executionsViewLink"><a href="#executions">Executions</a></li>
-        <li id="summaryViewLink"><a href="#summary">Summary</a></li>
+        <li id="graphViewLink"><a href="#graph">拓扑图</a></li>
+        <li id="executionsViewLink"><a href="#executions">执行历史</a></li>
+        <li id="summaryViewLink"><a href="#summary">摘要信息</a></li>
       </ul>
     </div>
 
@@ -115,19 +115,19 @@
             <thead>
               <tr>
                 <th>Execution Id</th>
-                <th>User</th>
-                <th class="date">Start Time</th>
-                <th class="date">End Time</th>
-                <th class="elapse">Elapsed</th>
-                <th class="status">Status</th>
-                <th class="action">Action</th>
+                <th>执行用户</th>
+                <th class="date">开始时间</th>
+                <th class="date">结束时间</th>
+                <th class="elapse">总共耗时</th>
+                <th class="status">状态</th>
+                <th class="action">操作</th>
               </tr>
             </thead>
             <tbody id="execTableBody">
             </tbody>
           </table>
           <ul id="pageSelection" class="pagination">
-            <li id="previous" class="first"><a><span class="arrow">&larr;</span>Previous</a></li>
+            <li id="previous" class="first"><a><span class="arrow">&larr;</span>上一页</a></li>
             <li id="page1"><a href="#page1">1</a></li>
             <li id="page2"><a href="#page2">2</a></li>
             <li id="page3"><a href="#page3">3</a></li>

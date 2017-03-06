@@ -15,5 +15,5 @@
 *#
 
 #macro(appname)
-  Azkaban Web Client
+  NC_ETL Web Client
 #end

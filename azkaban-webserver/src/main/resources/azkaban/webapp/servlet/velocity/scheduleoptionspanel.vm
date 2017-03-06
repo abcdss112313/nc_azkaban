@@ -17,7 +17,7 @@
 <div id="scheduleModalBackground" class="modalBackground2">
   <div id="schedule-options" class="modal modalContainer2">
     <a href='#' title='Close' class='modal-close'>x</a>
-      <h3>Schedule Flow Options</h3>
+      <h3>工作流调度设置</h3>
       <div>
         <ul class="optionsPicker">
           <li id="scheduleGeneralOptions">General Options</li>

@@ -22,12 +22,12 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Schedule Flow Options</h4>
+              <h4 class="modal-title">工作流调度计划</h4>
             </div><!-- /modal-header -->
             <div class="modal-body">
               <fieldset class="form-horizontal">
                 <div class="form-group">
-                  <label class="col-sm-2 control-label">Time</label>
+                  <label class="col-sm-2 control-label">时间</label>
                   <div class="col-sm-7">
                     <input type="text" id="timepicker" class="form-control">
                   </div>
@@ -39,17 +39,17 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-sm-2 control-label">Date</label>
+                  <label class="col-sm-2 control-label">开始日期</label>
                   <div class="col-sm-10">
                     <input type="text" id="datepicker" class="form-control">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label class="col-sm-2">Recurrence</label>
+                  <label class="col-sm-2">调度频率</label>
                   <div class="col-sm-3">
                     <div class="checkbox">
                       <input id="is_recurring" type="checkbox" checked="checked">
-                      <label>repeat every</label>
+                      <label>重复调度</label>
                     </div>
                   </div>
                   <div class="col-sm-2">
@@ -57,20 +57,20 @@
                   </div>
                   <div class="col-sm-3">
                     <select id="period_units" class="form-control">                       
-                      <option value="s">Seconds</option>
-                      <option value="m">Minutes</option>
-                      <option value="h">Hours</option>
-                      <option value="d">Days</option>
-                      <option value="w">Weeks</option>
-                      <option value="M">Months</option>
+                      <option value="s">秒</option>
+                      <option value="m">分</option>
+                      <option value="h">小时</option>
+                      <option value="d">天</option>
+                      <option value="w">周</option>
+                      <option value="M">月</option>
                     </select>
                   </div>
                 </div>
               </fieldset>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-success" id="schedule-button">Schedule</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button type="button" class="btn btn-success" id="schedule-button">执行调度</button>
             </div>
           </div>
         </div>

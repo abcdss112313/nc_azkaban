@@ -21,7 +21,7 @@
     </div>
     <div class="container-full">
       <div class="alert alert-danger">
-        <h4>Error</h4>
+        <h4>错误：</h4>
         $errorMsg
       </div>
     </div>

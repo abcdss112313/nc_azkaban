@@ -46,7 +46,7 @@
 
     <div class="az-page-header">
       <div class="container-full">
-        <h1><a href="${context}/executor">Executing Flows</a></h1>
+        <h1><a href="${context}/executor">执行中任务</a></h1>
       </div>
     </div>
 
@@ -57,8 +57,8 @@
 ## Page Content
 
       <ul class="nav nav-tabs nav-sm" id="header-tabs">
-        <li id="currently-running-view-link"><a href="#currently-running">Currently Running</a></li>
-        <li id="recently-finished-view-link"><a href="#recently-finished">Recently Finished</a></li>
+        <li id="currently-running-view-link"><a href="#currently-running">运行中任务</a></li>
+        <li id="recently-finished-view-link"><a href="#recently-finished">最近已完成任务</a></li>
       </ul>
 
       <div class="row" id="currently-running-view">
@@ -68,16 +68,16 @@
               <tr>
                 <th>#</th>
                 <th class="execid">Execution Id</th>
-                <th >Executor Id</th>
-                <th>Flow</th>
-                <th>Project</th>
-                <th class="user">User</th>
-                <th class="user">Proxy</th>
-                <th class="date">Start Time</th>
-                <th class="date">End Time</th>
-                <th class="elapse">Elapsed</th>
-                <th class="status">Status</th>
-                <th class="action">Action</th>
+              <!--  <th >执行编号</th>-->
+                <th>工作流</th>
+                <th>工程名</th>
+                <th class="user">操作用户</th>
+                <th class="user">代理用户</th>
+                <th class="date">开始时间</th>
+                <th class="date">结束时间</th>
+                <th class="elapse">总共耗时</th>
+                <th class="status">状态</th>
+             <!--   <th class="action">操作</th> -->
               </tr>
             </thead>
             <tbody>
@@ -113,7 +113,7 @@
   #end
 #else
               <tr>
-                <td colspan="10">No Executing Flows</td>
+                <td colspan="10">暂无数据</td>
               </tr>
 #end
             </tbody>
@@ -127,16 +127,16 @@
             <thead>
               <tr>
                 <th>#</th>
-                <th class="execid">Execution Id</th>
-                <th>Flow</th>
-                <th>Project</th>
-                <th class="user">User</th>
-                <th class="user">Proxy</th>
-                <th class="date">Start Time</th>
-                <th class="date">End Time</th>
-                <th class="elapse">Elapsed</th>
-                <th class="status">Status</th>
-                <th class="action">Action</th>
+                <th class="execid">执行编号</th>
+                <th>工作流</th>
+                <th>工程</th>
+                <th class="user">操作用户</th>
+                <th class="user">代理用户</th>
+                <th class="date">开始时间</th>
+                <th class="date">结束时间</th>
+                <th class="elapse">总共耗时</th>
+                <th class="status">状态</th>
+               <!--  <th class="action">操作</th>-->
               </tr>
             </thead>
             <tbody>

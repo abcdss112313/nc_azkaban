@@ -58,9 +58,9 @@
             <div class="panel panel-default">
               <div class="panel-heading">
                 <div class="pull-right">
-                  <button type="button" id="updateLogBtn" class="btn btn-xs btn-default">Refresh</button>
+                  <button type="button" id="updateLogBtn" class="btn btn-xs btn-default">刷新</button>
                 </div>
-                Job Logs
+                任务日志
               </div>
               <div class="panel-body">
                 <pre id="logSection"></pre>
@@ -79,7 +79,7 @@
           <div class="modal-content">
             <div class="modal-header" id="messageTitle">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Error</h4>
+              <h4 class="modal-title">错误</h4>
             </div>
             <div class="modal-body" id="messageDiv">
               <p id="messageBox"></p>

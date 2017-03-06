@@ -19,16 +19,16 @@
       <div class="modal" id="upload-project-modal">
         <div class="modal-dialog">
           <div class="modal-content">
-            <form id="upload-project-form" enctype="multipart/form-data" method="post" action="$!context/manager">
+            <form id="upload-project-form"  enctype="multipart/form-data" method="post" action="$!context/manager">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Upload Project Files</h4>
+                <h4 class="modal-title">上传工程文件</h4>
               </div>
               <div class="modal-body">
                 <div class="alert alert-danger" id="upload-project-modal-error-msg">$error_msg</div>
                 <fieldset class="form-horizontal">
                   <div class="form-group">
-                    <label for="file" class="col-sm-3 control-label">Job Archive</label>
+                    <label for="file" class="col-sm-3 control-label">JOB档案</label>
                     <div class="col-sm-9">
                       <input type="file" class="form-control" id="file" name="file">
                     </div>
@@ -57,8 +57,8 @@
               <div class="modal-footer">
                 <input type="hidden" name="project" value="$project.name">
                 <input type="hidden" name="action" value="upload">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="upload-project-btn">Upload</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="upload-project-btn">上传</button>
               </div>
             </form>
           </div>
@@ -72,17 +72,17 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Delete Project</h4>
+              <h4 class="modal-title">删除工程</h4>
             </div>
             <div class="modal-body">
-              <p><strong>Warning:</strong> This project will be deleted and may not be recoverable.</p>
+              <p><strong>警告:</strong> 工程删除后不可恢复！！</p>
             </div>
             <div class="modal-footer">
               <form id="delete-form">
                 <input type="hidden" name="project" value="$project.name">
                 <input type="hidden" name="delete" value="true">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="delete-btn">Delete Project</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="delete-btn">确认</button>
               </form>
             </div>
           </div>

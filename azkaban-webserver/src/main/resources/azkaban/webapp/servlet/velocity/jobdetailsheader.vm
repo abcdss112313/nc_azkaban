@@ -20,11 +20,11 @@
       <div class="container-full">
         <div class="row">
           <div class="header-title">
-            <h1><a href="${context}/executor?execid=${execid}&job=${jobid}">Job Execution <small>$jobid</small></a></h1>
+            <h1><a href="${context}/executor?execid=${execid}&job=${jobid}">任务 <small>$jobid</small></a></h1>
           </div>
           <div class="header-control">
             <div class="pull-right header-form">
-              <a href="${context}/manager?project=${projectName}&flow=${parentflowid}&job=$jobname" class="btn btn-info btn-sm">Job Properties</a>
+              <a href="${context}/manager?project=${projectName}&flow=${parentflowid}&job=$jobname" class="btn btn-info btn-sm">任务参数</a>
             </div>
           </div>
         </div>
@@ -33,10 +33,10 @@
     <div class="page-breadcrumb">
       <div class="container-full">
         <ol class="breadcrumb">
-          <li><a href="${context}/manager?project=${projectName}"><strong>Project</strong> $projectName</a></li>
-          <li><a href="${context}/manager?project=${projectName}&flow=${flowid}"><strong>Flow</strong> $flowid</a></li>
-          <li><a href="${context}/executor?execid=${execid}#jobslist"><strong>Execution</strong> $execid</a></li>
-          <li class="active"><strong>Job</strong> $jobid</li>
+          <li><a href="${context}/manager?project=${projectName}"><strong>工程</strong> $projectName</a></li>
+          <li><a href="${context}/manager?project=${projectName}&flow=${flowid}"><strong>工作流</strong> $flowid</a></li>
+          <li><a href="${context}/executor?execid=${execid}#jobslist"><strong>执行编号</strong> $execid</a></li>
+          <li class="active"><strong>任务</strong> $jobid</li>
         </ol>
       </div>
     </div>
@@ -49,9 +49,9 @@
 
       <ul class="nav nav-tabs nav-sm" id="headertabs">
   #if ($current_page == "executing")
-        <li class="active" id="jobLogViewLink"><a href="#logs">Job Logs</a></li>
+        <li class="active" id="jobLogViewLink"><a href="#logs">任务日志</a></li>
   #else
-        <li id="jobLogViewLink"><a href="${context}/executor?execid=${execid}&job=${jobid}#logs">Job Logs</a></li>
+        <li id="jobLogViewLink"><a href="${context}/executor?execid=${execid}&job=${jobid}#logs">任务日志</a></li>
   #end
   #foreach ($jobViewerPlugin in $jobViewerPlugins)
         <li#if($current_page == $jobViewerPlugin.pluginName) class="active"#end><a href="$!context/${jobViewerPlugin.pluginPath}?execid=${execid}&jobid=${jobid}">$jobViewerPlugin.pluginName</a></li>

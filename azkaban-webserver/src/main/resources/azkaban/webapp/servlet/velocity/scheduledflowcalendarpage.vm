@@ -53,7 +53,7 @@
 
     <div class="az-page-header">
       <div class="container-full">
-        <h1>Scheduled Flows</h1>
+        <h1>工作流调度计划</h1>
       </div>
     </div>
 
@@ -63,9 +63,9 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="pull-right">
-            <button type="button" class="nav-prev-week btn btn-default">Previous Week</button>
-            <button type="button" class="nav-this-week btn btn-default">Today</button>
-            <button type="button" class="nav-next-week btn btn-default">Next Week</button>
+            <button type="button" class="nav-prev-week btn btn-default">上周</button>
+            <button type="button" class="nav-this-week btn btn-default">今天</button>
+            <button type="button" class="nav-next-week btn btn-default">下周</button>
           </div>
           <div id="svgDivCustom"></div>
         </div>

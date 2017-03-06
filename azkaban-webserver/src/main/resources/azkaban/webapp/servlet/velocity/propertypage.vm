@@ -50,9 +50,9 @@
     <div class="page-breadcrumb">
       <div class="container-full">
         <ol class="breadcrumb">
-          <li><a href="${context}/manager?project=${project.name}"><strong>Project</strong> $project.name</a></li>
-          <li><a href="${context}/manager?project=${project.name}&flow=${flowid}"><strong>Flow</strong> $flowid</a></li>
-          <li><a href="${context}/manager?project=${project.name}&flow=${flowid}&job=${jobid}"><strong>Job</strong> $jobid</a></li>
+          <li><a href="${context}/manager?project=${project.name}"><strong>工程&nbsp;&nbsp;</strong> $project.name</a></li>
+          <li><a href="${context}/manager?project=${project.name}&flow=${flowid}"><strong>工作流&nbsp;&nbsp;</strong> $flowid</a></li>
+          <li><a href="${context}/manager?project=${project.name}&flow=${flowid}&job=${jobid}"><strong>任务&nbsp;&nbsp;</strong> $jobid</a></li>
           <li class="active"><strong>Properties</strong> $property</li>
         </ol>
       </div>
@@ -73,8 +73,8 @@
             <table class="table table-striped table-bordered properties-table">
               <thead>
                 <tr>
-                  <th class="tb-pname">Parameter Name</th>
-                  <th class="tb-pvalue">Value</th>
+                  <th class="tb-pname">参数名称</th>
+                  <th class="tb-pvalue">值</th>
                 </tr>
               </thead>
               <tbody>
@@ -90,8 +90,8 @@
         </div><!-- /col-xs-8 -->
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas">
           <div class="well" id="job-summary">
-            <h4>Properties <small>$property</small></h4>
-            <p><strong>Job</strong> $jobid</p>
+            <h4>参数: <small>$property</small></h4>
+            <p><strong>任务：</strong> $jobid</p>
           </div>
 
           <div class="panel panel-default">

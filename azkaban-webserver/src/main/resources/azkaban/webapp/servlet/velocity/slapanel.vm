@@ -19,13 +19,13 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">SLA Options</h4>
+              <h4 class="modal-title">SLA设置</h4>
             </div>
             <div class="modal-body">
-              <h4>SLA Alert Emails</h4>
+              <h4>SLA报警邮件</h4>
               <fieldset>
                 <div class="form-group">
-                  <label>SLA Alert Emails</label>
+                  <label>SLA报警邮件</label>
                   <textarea id="slaEmails" class="form-control"></textarea>
                 </div>
               </fieldset>

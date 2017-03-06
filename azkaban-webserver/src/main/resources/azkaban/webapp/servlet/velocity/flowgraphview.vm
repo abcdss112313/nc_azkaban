@@ -25,7 +25,7 @@
           <div class="panel-heading">
             <div class="graph-sidebar-close" id="close-btn" title="Close Panel"><span class="glyphicon glyphicon-remove"></span></div>
             <div class="graph-sidebar-search">
-              <input id="filter" type="text" placeholder="Job Filter" class="form-control input-sm">
+              <input id="filter" type="text" placeholder="任务过滤" class="form-control input-sm">
             </div>
           </div>
           <div id="joblist" class="graph-sidebar-list"></div>

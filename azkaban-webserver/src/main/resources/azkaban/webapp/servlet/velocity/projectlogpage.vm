@@ -46,7 +46,7 @@
 #else
 
   ## Page header.
-
+h
   #parse ("azkaban/webapp/servlet/velocity/projectpageheader.vm")
 
   ## Page content.
@@ -64,17 +64,17 @@
           <div class="panel panel-default" id="flow-tabs">
             <div class="panel-heading">
               <div class="pull-right" id="project-options">
-                <button type="button" id="updateLogBtn" class="btn btn-xs btn-info">Refresh</button>
+                <button type="button" id="updateLogBtn" class="btn btn-xs btn-info">刷新</button>
               </div>
-              Audit Logs
+              日志
             </div>
             <table class="table table-striped" id="logTable">
               <thead>
                 <tr>
-                  <th>Time</th>
-                  <th>User</th>
-                  <th>Type</th>
-                  <th>Message</th>
+                  <th>操作时间</th>
+                  <th>用户</th>
+                  <th>行为</th>
+                  <th>信息</th>
                 </tr>
               </thead>
               <tbody>

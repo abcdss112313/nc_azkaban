@@ -42,7 +42,7 @@
       <div class="container-full">
         <div class="row">
           <div class="header-title">
-            <h1><a href="${context}/index">Projects</a></h1>
+            <h1><a href="${context}/index">工程</a></h1>
           </div>
           <div class="header-control">
             <form id="search-form" method="get" class="form-inline header-form" role="form">
@@ -52,9 +52,9 @@
 #end
               <div class="form-group col-xs-9">
                 <div class="input-group">
-                  <input id="search-textbox" type="text" placeholder="Project name containing..." value=#if($search_term) "$esc.html(${search_term})" #else "" #end class="form-control input-sm" name="searchterm">
+                  <input id="search-textbox" type="text" placeholder="工程名..." value=#if($search_term) "$esc.html(${search_term})" #else "" #end class="form-control input-sm" name="searchterm">
                   <span class="input-group-btn">
-                    <button class="btn btn-sm btn-primary">Quick Search</button>
+                    <button class="btn btn-sm btn-primary">快速查询</button>
                   </span>
                 </div>
               </div>
@@ -63,7 +63,7 @@
 ## Note: The Create Project button is not completely flush to the right because
 ## form-group has padding.
                 <div class="pull-right">
-                  <button type="button" id="create-project-btn" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-plus"></span> Create Project</button>
+                  <button type="button" id="create-project-btn" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-plus"></span> 创建工程 </button>
                 </div>
               </div>
 #end
@@ -82,9 +82,9 @@
       <div class="row row-offcanvas row-offcanvas-left">
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas">
           <ul class="nav nav-pills nav-stacked">
-            <li#if ($viewProjects == 'personal') class="active"#end><a href="${context}/index">Personal</a></li>
-            <li#if ($viewProjects == 'group') class="active"#end><a href="${context}/index?group">Group</a></li>
-            <li#if ($viewProjects == 'all') class="active"#end><a href="${context}/index?all">All</a></li>
+            <li#if ($viewProjects == 'personal') class="active"#end><a href="${context}/index">私有工程</a></li>
+            <li#if ($viewProjects == 'group') class="active"#end><a href="${context}/index?group">团队工程</a></li>
+            <li#if ($viewProjects == 'all') class="active"#end><a href="${context}/index?all">所有</a></li>
           </ul>
         </div>
         <div class="col-xs-12 col-sm-9 col-content">
@@ -95,7 +95,7 @@
               <div class="project-info">
                 <h4><a href="${context}/manager?project=${project.name}">$project.name</a></h4>
                 <p class="project-description">$project.description</p>
-                <p class="project-last-modified">Last modified on <strong>$utils.formatDate($project.lastModifiedTimestamp)</strong> by <strong>$project.lastModifiedUser</strong>.</p>
+                <p class="project-last-modified">最后更新时间: <strong>$utils.formatDate($project.lastModifiedTimestamp)</strong>&nbsp;&nbsp;更改人:<strong>$project.lastModifiedUser</strong>.</p>
               </div>
               <div class="project-expander" id="${project.name}">
                 <span class="glyphicon glyphicon-chevron-down project-expander-icon"></span>
@@ -111,8 +111,8 @@
           </ul>
 #else
           <div class="callout callout-default">
-            <h4>No Viewable Projects</h4>
-            <p>Click Create Project to create a new project.</p>
+            <h4>无工程</h4>
+            <p>点击创建</p>
           </div>
 #end
         </div>
@@ -125,21 +125,21 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Create Project</h4>
+              <h4 class="modal-title">创建工程</h4>
             </div>
             <div class="modal-body">
               <div class="alert alert-danger" id="modal-error-msg">$error_msg</div>
               <fieldset class="form-horizontal">
                 <div class="form-group">
-                  <label for="path" class="col-sm-2 control-label">Name</label>
+                  <label for="path" class="col-sm-2 control-label">工程名称:</label>
                   <div class="col-sm-10">
                     <input id="path" name="project" type="text" class="form-control" placeholder="Project name">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="description" class="col-sm-2 control-label">Description</label>
+                  <label for="description" class="col-sm-2 control-label">描述:</label>
                   <div class="col-sm-10">
-                    <textarea id="description" name="description" rows="2" cols="40" class="form-control" placeholder="Project description"></textarea>
+                    <textarea id="description" name="description" rows="2" cols="40" class="form-control" placeholder="工程描述"></textarea>
                   </div>
                 </div>
               </fieldset>
@@ -147,8 +147,8 @@
             <div class="modal-footer">
               <input name="action" type="hidden" value="create">
               <input name="redirect" type="hidden" value="$!context/">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" id="create-btn">Create Project</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button type="button" class="btn btn-primary" id="create-btn">确认</button>
             </div>
           </div>
         </div>

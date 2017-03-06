@@ -16,8 +16,8 @@
 
           <ul class="nav nav-tabs nav-sm">
             <li#if($project_page == 'flows') class="active"#end><a href="${context}/manager?project=${project.name}">Flows</a></li>
-            <li#if($project_page == 'permissions') class="active"#end><a id="project-permission-btn" href="${context}/manager?project=${project.name}&permissions">Permissions</a></li>
+            <li#if($project_page == 'permissions') class="active"#end><a id="project-permission-btn" href="${context}/manager?project=${project.name}&permissions">权限</a></li>
   #if ($admin)
-            <li#if($project_page == 'logs') class="active"#end><a id="project-logs-btn" href="${context}/manager?project=${project.name}&logs">Project Logs</a></li>
+            <li#if($project_page == 'logs') class="active"#end><a id="project-logs-btn" href="${context}/manager?project=${project.name}&logs">工程日志</a></li>
   #end
           </ul>
